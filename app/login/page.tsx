@@ -4,22 +4,25 @@ import { signIn, useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { LogIn } from "lucide-react"
 
+function ErrorHandler({ onError }: { onError: (error: string) => void }) {
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const error = searchParams?.get("error")
+    if (error) {
+      onError("Error al iniciar sesión. Por favor, intenta de nuevo.")
+    }
+  }, [searchParams, onError])
+
+  return null
+}
+
 function LoginForm() {
   const [error, setError] = useState("")
   const router = useRouter()
-  const searchParams = useSearchParams()
   const { data: session } = useSession()
 
   useEffect(() => {
-    // Si hay un error en la URL, mostrarlo
-    const error = searchParams?.get("error")
-    if (error) {
-      setError("Error al iniciar sesión. Por favor, intenta de nuevo.")
-    }
-  }, [searchParams])
-
-  useEffect(() => {
-    // Si el usuario ya está autenticado, redirigir a la página principal
     if (session) {
       router.push("/")
     }
@@ -47,12 +50,15 @@ function LoginForm() {
 }
 
 export default function LoginPage() {
+  const [error, setError] = useState("")
+
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0a0f1a] via-[#181c2a] to-[#111827] text-white">
         <div className="animate-pulse">Cargando...</div>
       </div>
     }>
+      <ErrorHandler onError={setError} />
       <LoginForm />
     </Suspense>
   )

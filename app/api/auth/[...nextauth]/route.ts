@@ -37,9 +37,17 @@ export const authOptions: NextAuthOptions = {
     error: "/login",
   },
   callbacks: {
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, user }) {
+      // Si el usuario existe y tiene id, lo asigna
       if (user && user.id) {
         token.id = user.id;
+      }
+      // Si el token ya tiene email pero no id, busca el usuario en la base
+      if (!token.id && token.email) {
+        const dbUser = await prisma.user.findUnique({ where: { email: token.email as string } });
+        if (dbUser) {
+          token.id = dbUser.id;
+        }
       }
       return token;
     },

@@ -1,19 +1,13 @@
 import { withAuth } from "next-auth/middleware"
-import { NextResponse } from "next/server"
 
-export default withAuth(
-  function middleware(req) {
-    return NextResponse.next()
+export default withAuth({
+  pages: {
+    signIn: "/login",
   },
-  {
-    callbacks: {
-      authorized: ({ token }) => !!token
-    },
-    pages: {
-      signIn: "/login"
-    }
-  }
-)
+  callbacks: {
+    authorized: ({ token }) => !!token,
+  },
+})
 
 export const config = {
   matcher: [
@@ -26,5 +20,5 @@ export const config = {
      * - login (login page)
      */
     "/((?!api/auth|_next/static|_next/image|favicon.ico|login).*)",
-  ]
+  ],
 } 

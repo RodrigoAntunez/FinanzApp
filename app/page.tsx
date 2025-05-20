@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { ArrowDown, ArrowUp, Calendar, DollarSign, Home, PiggyBank, Plus, Wallet } from "lucide-react"
 import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -24,6 +25,8 @@ export default function DashboardPage() {
   const [ingresos, setIngresos] = useState<any[]>([])
   const [gastosFijos, setGastosFijos] = useState<any[]>([])
   const [gastosDiarios, setGastosDiarios] = useState<any[]>([])
+
+  const { data: session, status } = useSession()
 
   useEffect(() => {
     async function fetchAll() {
@@ -48,6 +51,14 @@ export default function DashboardPage() {
   const totalGastosDiarios = gastosDiarios.reduce((sum, g) => sum + (Number(g.monto) || 0), 0)
   const totalGastos = totalGastosFijos + totalGastosDiarios
   const balanceTotal = totalIngresos - totalGastos
+
+  if (status === "loading") {
+    return <div>Cargando...</div>
+  }
+
+  if (!session || !session.user || !session.user.id) {
+    return <div>No autenticado</div>
+  }
 
   return (
     <div className="flex min-h-screen bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#3730a3] via-[#23204d] to-[#0a0f1a] text-white">

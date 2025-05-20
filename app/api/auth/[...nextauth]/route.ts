@@ -37,12 +37,11 @@ export const authOptions: NextAuthOptions = {
     error: "/login",
   },
   callbacks: {
-    async jwt({ token, user }) {
-      // Si el usuario existe y tiene id, lo asigna
+    async jwt({ token, user, account }) {
+      console.log("JWT Callback:", { token, user, account })
       if (user && user.id) {
         token.id = user.id;
       }
-      // Si el token ya tiene email pero no id, busca el usuario en la base
       if (!token.id && token.email) {
         const dbUser = await prisma.user.findUnique({ where: { email: token.email as string } });
         if (dbUser) {
@@ -52,6 +51,7 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
+      console.log("Session Callback:", { session, token })
       if (session.user) {
         if (token?.id) {
           session.user.id = String(token.id);
@@ -64,22 +64,26 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    async signIn({ user }) {
+    async signIn({ user, account, profile }) {
+      console.log("SignIn Callback:", { user, account, profile })
       if (!user.email) {
         return false
       }
       return true
     },
     async redirect({ url, baseUrl }) {
-      // Permite redirecciones relativas
+      console.log("Redirect Callback:", { url, baseUrl })
       if (url.startsWith("/")) return `${baseUrl}${url}`
-      // Permite redirecciones a la misma base
       else if (new URL(url).origin === baseUrl) return url
       return baseUrl
     },
   },
-  debug: process.env.NODE_ENV === "development",
+  debug: true, // Siempre activar debug
   secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 días
+  },
   cookies: {
     sessionToken: {
       name: `next-auth.session-token`,

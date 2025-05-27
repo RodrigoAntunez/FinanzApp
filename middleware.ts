@@ -5,7 +5,13 @@ export default withAuth({
     signIn: "/login",
   },
   callbacks: {
-    authorized: ({ token }) => !!token,
+    authorized: ({ token, req }) => {
+      // Permitir acceso a rutas de API de autenticación
+      if (req.nextUrl.pathname.startsWith('/api/auth')) {
+        return true;
+      }
+      return !!token;
+    },
   },
 })
 
@@ -18,7 +24,8 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - login (login page)
+     * - public (archivos públicos)
      */
-    "/((?!api/auth|_next/static|_next/image|favicon.ico|login).*)",
+    "/((?!api/auth|_next/static|_next/image|favicon.ico|login|public).*)",
   ],
 } 

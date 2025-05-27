@@ -73,12 +73,17 @@ export const authOptions: NextAuthOptions = {
     },
     async redirect({ url, baseUrl }) {
       console.log("Redirect Callback:", { url, baseUrl })
-      if (url.startsWith("/")) return `${baseUrl}${url}`
-      else if (new URL(url).origin === baseUrl) return url
-      return baseUrl
+      // Asegurarse de que la URL base sea HTTPS en producción
+      const baseUrlWithProtocol = process.env.NODE_ENV === "production" 
+        ? baseUrl.replace(/^http:/, 'https:')
+        : baseUrl;
+      
+      if (url.startsWith("/")) return `${baseUrlWithProtocol}${url}`
+      else if (new URL(url).origin === baseUrlWithProtocol) return url
+      return baseUrlWithProtocol
     },
   },
-  debug: true, // Siempre activar debug
+  debug: process.env.NODE_ENV === "development", // Solo activar debug en desarrollo
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
@@ -91,7 +96,8 @@ export const authOptions: NextAuthOptions = {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        secure: process.env.NODE_ENV === "production"
+        secure: process.env.NODE_ENV === "production",
+        domain: process.env.NODE_ENV === "production" ? process.env.NEXTAUTH_URL?.replace(/^https?:\/\//, '') : undefined
       }
     },
     callbackUrl: {
@@ -99,7 +105,8 @@ export const authOptions: NextAuthOptions = {
       options: {
         sameSite: "lax",
         path: "/",
-        secure: process.env.NODE_ENV === "production"
+        secure: process.env.NODE_ENV === "production",
+        domain: process.env.NODE_ENV === "production" ? process.env.NEXTAUTH_URL?.replace(/^https?:\/\//, '') : undefined
       }
     },
     csrfToken: {
@@ -108,7 +115,8 @@ export const authOptions: NextAuthOptions = {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        secure: process.env.NODE_ENV === "production"
+        secure: process.env.NODE_ENV === "production",
+        domain: process.env.NODE_ENV === "production" ? process.env.NEXTAUTH_URL?.replace(/^https?:\/\//, '') : undefined
       }
     }
   }

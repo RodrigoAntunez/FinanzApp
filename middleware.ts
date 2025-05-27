@@ -6,8 +6,11 @@ export default withAuth({
   },
   callbacks: {
     authorized: ({ token, req }) => {
-      // Permitir acceso a todo para depuración
-      return true;
+      // Log para depuración
+      if (!token) {
+        console.log("Token no encontrado en middleware, redirigiendo a login");
+      }
+      return !!token;
     },
   },
 })

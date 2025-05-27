@@ -19,6 +19,7 @@ import { Sidebar } from "@/components/sidebar"
 export default function Home() {
   const [sidebarHovered, setSidebarHovered] = useState(false)
   const [tab, setTab] = useState("overview")
+  const [showWelcome, setShowWelcome] = useState(true)
 
   // Estados para los datos reales
   const [ahorros, setAhorros] = useState<any[]>([])
@@ -44,6 +45,13 @@ export default function Home() {
     fetchAll()
   }, [])
 
+  useEffect(() => {
+    if (showWelcome) {
+      const timer = setTimeout(() => setShowWelcome(false), 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [showWelcome])
+
   // Cálculos de totales reales
   const totalAhorros = ahorros.reduce((sum, a) => sum + (Number(a.monto) || 0), 0)
   const totalIngresos = ingresos.reduce((sum, i) => sum + (Number(i.monto) || 0), 0)
@@ -62,9 +70,28 @@ export default function Home() {
 
   return (
     <>
-      <div style={{background: '#23204d', color: '#fff', padding: 16, borderRadius: 8, margin: 16, textAlign: 'center'}}>
-        ¡Bienvenido, {session.user.name}!
-      </div>
+      {showWelcome && (
+        <div style={{
+          background: 'rgba(36, 41, 61, 0.85)',
+          color: '#cbd5e1',
+          padding: 8,
+          borderRadius: 6,
+          margin: '16px auto',
+          textAlign: 'center',
+          maxWidth: 320,
+          fontSize: 15,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          position: 'fixed',
+          top: 24,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          opacity: 0.95,
+          transition: 'opacity 0.5s',
+        }}>
+          ¡Bienvenido, {session.user.name}!
+        </div>
+      )}
       <div className="flex min-h-screen bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#3730a3] via-[#23204d] to-[#0a0f1a] text-white">
         <Sidebar
           isHovered={sidebarHovered}

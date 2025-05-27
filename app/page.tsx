@@ -63,8 +63,7 @@ export default function Home() {
   return (
     <>
       <div style={{background: '#23204d', color: '#fff', padding: 16, borderRadius: 8, margin: 16, textAlign: 'center'}}>
-        ¡Bienvenido, {session.user.name}!<br />
-        <pre style={{textAlign: 'left', background: '#18132b', color: '#fff', padding: 12, borderRadius: 8, marginTop: 8}}>{JSON.stringify(session, null, 2)}</pre>
+        ¡Bienvenido, {session.user.name}!
       </div>
       <div className="flex min-h-screen bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#3730a3] via-[#23204d] to-[#0a0f1a] text-white">
         <Sidebar

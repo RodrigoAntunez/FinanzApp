@@ -297,7 +297,7 @@ export function GastosDiarios() {
   return (
     <div className="space-y-6">
       {/* Header con resumen */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
         <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -343,251 +343,253 @@ export function GastosDiarios() {
       </div>
 
       {/* Tabla moderna de gastos diarios */}
-      <Card className="bg-[#181c2a]/80 border-none">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle className="text-lg">Gastos Diarios</CardTitle>
-            <CardDescription className="text-gray-400">Tabla de tus gastos diarios</CardDescription>
-          </div>
-          <Dialog open={addOpen} onOpenChange={(open) => {
-            setAddOpen(open)
-            setError(null)
-            setCreandoCategoria(false)
-            setNuevaCategoria("")
-            if (open) {
-              setAddFields({ nombre: "", monto: "", categoria: "Alimentación", fecha: hoy })
-            }
-          }}>
-            <DialogTrigger asChild>
-              <Button className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700">
-                <Plus className="mr-2 h-4 w-4" />
-                Agregar Gasto
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] bg-[#181c2a] text-white">
-              <DialogHeader>
-                <DialogTitle>Agregar Gasto</DialogTitle>
-                <DialogDescription className="text-gray-300">Ingresa los detalles del gasto que deseas registrar.</DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="add-nombre" className="text-right">Nombre</label>
-                  <input
-                    id="add-nombre"
-                    className="col-span-3 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-white"
-                    value={addFields.nombre}
-                    onChange={e => setAddFields({ ...addFields, nombre: e.target.value })}
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="add-monto" className="text-right">Monto</label>
-                  <input
-                    id="add-monto"
-                    type="number"
-                    className="col-span-3 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-white"
-                    value={addFields.monto}
-                    onChange={e => setAddFields({ ...addFields, monto: e.target.value })}
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="add-categoria" className="text-right">Categoría</label>
-                  <select
-                    id="add-categoria"
-                    className="col-span-3 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-white"
-                    value={creandoCategoria ? "__nueva__" : addFields.categoria}
-                    onChange={e => {
-                      if (e.target.value === "__nueva__") {
-                        setCreandoCategoria(true)
-                        setAddFields({ ...addFields, categoria: "" })
-                      } else {
-                        setCreandoCategoria(false)
-                        setAddFields({ ...addFields, categoria: e.target.value })
-                      }
-                    }}
-                  >
-                    {categorias.map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                    <option value="__nueva__">Agregar nueva categoría...</option>
-                  </select>
-                </div>
-                {creandoCategoria && (
+      <div className="overflow-x-auto w-full">
+        <Card className="bg-[#181c2a]/80 border-none min-w-[600px] sm:min-w-0">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle className="text-lg">Gastos Diarios</CardTitle>
+              <CardDescription className="text-gray-400">Tabla de tus gastos diarios</CardDescription>
+            </div>
+            <Dialog open={addOpen} onOpenChange={(open) => {
+              setAddOpen(open)
+              setError(null)
+              setCreandoCategoria(false)
+              setNuevaCategoria("")
+              if (open) {
+                setAddFields({ nombre: "", monto: "", categoria: "Alimentación", fecha: hoy })
+              }
+            }}>
+              <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Agregar Gasto
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px] bg-[#181c2a] text-white">
+                <DialogHeader>
+                  <DialogTitle>Agregar Gasto</DialogTitle>
+                  <DialogDescription className="text-gray-300">Ingresa los detalles del gasto que deseas registrar.</DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <label htmlFor="nueva-categoria" className="text-right">Nueva categoría</label>
+                    <label htmlFor="add-nombre" className="text-right">Nombre</label>
                     <input
-                      id="nueva-categoria"
+                      id="add-nombre"
                       className="col-span-3 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-white"
-                      value={nuevaCategoria}
-                      onChange={e => setNuevaCategoria(e.target.value)}
-                      placeholder="Nombre de la categoría"
+                      value={addFields.nombre}
+                      onChange={e => setAddFields((fields: any) => ({ ...fields, nombre: e.target.value }))}
                     />
-                    <Button
-                      type="button"
-                      size="sm"
-                      className="bg-blue-700 text-white mt-2 col-span-4"
-                      onClick={async () => {
-                        const nombreNormalizado = nuevaCategoria.trim().toLowerCase()
-                        const existe = categorias.some(cat => cat.trim().toLowerCase() === nombreNormalizado)
-                        if (!nuevaCategoria) {
-                          setError("El nombre de la categoría no puede estar vacío.")
-                          return
-                        }
-                        if (existe) {
-                          setError("La categoría ya existe.")
-                          return
-                        }
-                        if (categorias.length >= 10) {
-                          setError("No se pueden crear más de 10 categorías.")
-                          return
-                        }
-                        try {
-                          const res = await fetch("/api/categorias-gasto-diario", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ nombre: nuevaCategoria.trim() }),
-                          })
-                          if (!res.ok) {
-                            const data = await res.json()
-                            setError(data.error || "Error al crear la categoría")
-                            return
-                          }
-                          await fetchCategorias();
-                          setAddFields(fields => ({ ...fields, categoria: nuevaCategoria.trim() }))
-                          setNuevaCategoria("")
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label htmlFor="add-monto" className="text-right">Monto</label>
+                    <input
+                      id="add-monto"
+                      type="number"
+                      className="col-span-3 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-white"
+                      value={addFields.monto}
+                      onChange={e => setAddFields((fields: any) => ({ ...fields, monto: e.target.value }))}
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label htmlFor="add-categoria" className="text-right">Categoría</label>
+                    <select
+                      id="add-categoria"
+                      className="col-span-3 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-white"
+                      value={creandoCategoria ? "__nueva__" : addFields.categoria}
+                      onChange={e => {
+                        if (e.target.value === "__nueva__") {
+                          setCreandoCategoria(true)
+                          setAddFields((fields: any) => ({ ...fields, categoria: "" }))
+                        } else {
                           setCreandoCategoria(false)
-                          setError(null)
-                        } catch (err: any) {
-                          setError("Error al crear la categoría")
+                          setAddFields((fields: any) => ({ ...fields, categoria: e.target.value }))
                         }
                       }}
                     >
-                      Agregar
-                    </Button>
+                      {categorias.map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                      <option value="__nueva__">Agregar nueva categoría...</option>
+                    </select>
                   </div>
-                )}
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="add-fecha" className="text-right">Fecha</label>
-                  <input
-                    id="add-fecha"
-                    type="date"
-                    className="col-span-3 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-white"
-                    value={addFields.fecha}
-                    onChange={e => setAddFields({ ...addFields, fecha: e.target.value })}
-                  />
+                  {creandoCategoria && (
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <label htmlFor="nueva-categoria" className="text-right">Nueva categoría</label>
+                      <input
+                        id="nueva-categoria"
+                        className="col-span-3 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-white"
+                        value={nuevaCategoria}
+                        onChange={e => setNuevaCategoria(e.target.value)}
+                        placeholder="Nombre de la categoría"
+                      />
+                      <Button
+                        type="button"
+                        size="sm"
+                        className="bg-blue-700 text-white mt-2 col-span-4"
+                        onClick={async () => {
+                          const nombreNormalizado = nuevaCategoria.trim().toLowerCase()
+                          const existe = categorias.some(cat => cat.trim().toLowerCase() === nombreNormalizado)
+                          if (!nuevaCategoria) {
+                            setError("El nombre de la categoría no puede estar vacío.")
+                            return
+                          }
+                          if (existe) {
+                            setError("La categoría ya existe.")
+                            return
+                          }
+                          if (categorias.length >= 10) {
+                            setError("No se pueden crear más de 10 categorías.")
+                            return
+                          }
+                          try {
+                            const res = await fetch("/api/categorias-gasto-diario", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ nombre: nuevaCategoria.trim() }),
+                            })
+                            if (!res.ok) {
+                              const data = await res.json()
+                              setError(data.error || "Error al crear la categoría")
+                              return
+                            }
+                            await fetchCategorias();
+                            setAddFields((fields: any) => ({ ...fields, categoria: nuevaCategoria.trim() }))
+                            setNuevaCategoria("")
+                            setCreandoCategoria(false)
+                            setError(null)
+                          } catch (err: any) {
+                            setError("Error al crear la categoría")
+                          }
+                        }}
+                      >
+                        Agregar
+                      </Button>
+                    </div>
+                  )}
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label htmlFor="add-fecha" className="text-right">Fecha</label>
+                    <input
+                      id="add-fecha"
+                      type="date"
+                      className="col-span-3 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-white"
+                      value={addFields.fecha}
+                      onChange={e => setAddFields((fields: any) => ({ ...fields, fecha: e.target.value }))}
+                    />
+                  </div>
+                  {error && <div className="text-red-400 text-sm col-span-4">{error}</div>}
                 </div>
-                {error && <div className="text-red-400 text-sm col-span-4">{error}</div>}
-              </div>
-              <DialogFooter>
-                <Button
-                  type="button"
-                  onClick={async () => {
-                    // Validación de campos obligatorios
-                    if (!addFields.nombre || !addFields.monto || (!addFields.categoria && !nuevaCategoria)) {
-                      setError("Completa todos los campos obligatorios.");
-                      return;
-                    }
-                    let categoriaFinal = addFields.categoria;
-                    let fechaFinal = addFields.fecha || getFechaBuenosAires();
-                    // Si está creando nueva categoría
-                    if (creandoCategoria && nuevaCategoria) {
-                      if (categorias.length >= 10) {
-                        setError("No se pueden crear más de 10 categorías.");
+                <DialogFooter>
+                  <Button
+                    type="button"
+                    onClick={async () => {
+                      // Validación de campos obligatorios
+                      if (!addFields.nombre || !addFields.monto || (!addFields.categoria && !nuevaCategoria)) {
+                        setError("Completa todos los campos obligatorios.");
                         return;
                       }
-                      if (!categorias.includes(nuevaCategoria)) {
-                        setCategorias([...categorias, nuevaCategoria]);
+                      let categoriaFinal = addFields.categoria;
+                      let fechaFinal = addFields.fecha || getFechaBuenosAires();
+                      // Si está creando nueva categoría
+                      if (creandoCategoria && nuevaCategoria) {
+                        if (categorias.length >= 10) {
+                          setError("No se pueden crear más de 10 categorías.");
+                          return;
+                        }
+                        if (!categorias.includes(nuevaCategoria)) {
+                          setCategorias([...categorias, nuevaCategoria]);
+                        }
+                        categoriaFinal = nuevaCategoria;
                       }
-                      categoriaFinal = nuevaCategoria;
+                      try {
+                        const res = await fetch("/api/gastos-diarios", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ ...addFields, categoria: categoriaFinal, fecha: fechaFinal }),
+                        });
+                        if (!res.ok) throw new Error("Error al guardar el gasto diario");
+                        const nuevo = await res.json();
+                        setGastos([...gastos, nuevo]);
+                        setAddOpen(false);
+                        setAddFields({ nombre: "", monto: "", categoria: "Alimentación", fecha: hoy });
+                        setCreandoCategoria(false);
+                        setNuevaCategoria("");
+                        setError(null);
+                      } catch (err: any) {
+                        setError(err.message);
+                      }
+                    }}
+                  >
+                    Guardar
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm rounded-xl overflow-hidden bg-[#181c2a]/80 border border-[#23204d]">
+                <thead>
+                  <tr className="bg-blue-950/80 text-blue-200 border-b border-[#23204d]">
+                    {/* <th className="px-4 py-3 text-left font-semibold">Icono</th> */}
+                    <th className="px-4 py-3 text-left font-semibold"> </th>
+                    <th className="px-4 py-3 text-left font-semibold">Nombre</th>
+                    <th className="px-4 py-3 text-left font-semibold">Monto</th>
+                    <th className="px-4 py-3 text-left font-semibold">Categoría</th>
+                    <th className="px-4 py-3 text-left font-semibold">Fecha</th>
+                    <th className="px-4 py-3 text-left font-semibold">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {gastos.map((gasto, idx) => {
+                    const Icon = categoriaIcons[gasto.categoria] || ShoppingCart
+                    const categoriasUnicas = [...new Set(gastos.map(g => g.categoria))]
+                    const badgeColor = getColorCategoria(gasto.categoria, categoriasUnicas)
+                    // Abrir modal de edición
+                    const handleEdit = (gasto: any) => {
+                      setGastoEdit(gasto)
+                      setEditFields((fields: any) => ({
+                        nombre: gasto.nombre,
+                        monto: gasto.monto,
+                        categoria: gasto.categoria,
+                        fecha: gasto.fecha,
+                      }))
+                      setEditOpen(true)
                     }
-                    try {
-                      const res = await fetch("/api/gastos-diarios", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ ...addFields, categoria: categoriaFinal, fecha: fechaFinal }),
-                      });
-                      if (!res.ok) throw new Error("Error al guardar el gasto diario");
-                      const nuevo = await res.json();
-                      setGastos([...gastos, nuevo]);
-                      setAddOpen(false);
-                      setAddFields({ nombre: "", monto: "", categoria: "Alimentación", fecha: hoy });
-                      setCreandoCategoria(false);
-                      setNuevaCategoria("");
-                      setError(null);
-                    } catch (err: any) {
-                      setError(err.message);
-                    }
-                  }}
-                >
-                  Guardar
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm rounded-xl overflow-hidden bg-[#181c2a]/80 border border-[#23204d]">
-              <thead>
-                <tr className="bg-blue-950/80 text-blue-200 border-b border-[#23204d]">
-                  {/* <th className="px-4 py-3 text-left font-semibold">Icono</th> */}
-                  <th className="px-4 py-3 text-left font-semibold"> </th>
-                  <th className="px-4 py-3 text-left font-semibold">Nombre</th>
-                  <th className="px-4 py-3 text-left font-semibold">Monto</th>
-                  <th className="px-4 py-3 text-left font-semibold">Categoría</th>
-                  <th className="px-4 py-3 text-left font-semibold">Fecha</th>
-                  <th className="px-4 py-3 text-left font-semibold">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {gastos.map((gasto, idx) => {
-                  const Icon = categoriaIcons[gasto.categoria] || ShoppingCart
-                  const categoriasUnicas = [...new Set(gastos.map(g => g.categoria))]
-                  const badgeColor = getColorCategoria(gasto.categoria, categoriasUnicas)
-                  // Abrir modal de edición
-                  const handleEdit = (gasto: any) => {
-                    setGastoEdit(gasto)
-                    setEditFields({
-                      nombre: gasto.nombre,
-                      monto: gasto.monto,
-                      categoria: gasto.categoria,
-                      fecha: gasto.fecha,
-                    })
-                    setEditOpen(true)
-                  }
-                  // Emoji representativo
-                  const emoji = categoriaEmojis[gasto.categoria] || "💸"
-                  return (
-                    <tr key={gasto.id} className={[
-                      idx % 2 === 0 ? "bg-[#101c3a]/80" : "bg-blue-950/40",
-                      "border-b border-[#23204d] hover:bg-[#23204d]/80 hover:shadow-[0_0_8px_0_rgba(59,130,246,0.10)] transition-all"
-                    ].join(' ')}>
-                      <td className="px-4 py-3 text-xl">{emoji}</td>
-                      <td className="px-4 py-3 text-white font-medium">{gasto.nombre}</td>
-                      <td className="px-4 py-3 text-red-500 font-bold">-${gasto.monto.toFixed(2)}</td>
-                      <td className="px-4 py-3">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${badgeColor} category-bounce-glow`}>{gasto.categoria}</span>
-                      </td>
-                      <td className="px-4 py-3 text-gray-400">{getFechaFormateada(gasto.fecha)}</td>
-                      <td className="px-4 py-3">
-                        <div className="flex gap-1">
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(gasto)}>
-                            <Edit className="h-4 w-4" />
-                            <span className="sr-only">Editar</span>
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDeleteGasto(gasto.id)}>
-                            <Trash className="h-4 w-4" />
-                            <span className="sr-only">Eliminar</span>
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+                    // Emoji representativo
+                    const emoji = categoriaEmojis[gasto.categoria] || "💸"
+                    return (
+                      <tr key={gasto.id} className={[
+                        idx % 2 === 0 ? "bg-[#101c3a]/80" : "bg-blue-950/40",
+                        "border-b border-[#23204d] hover:bg-[#23204d]/80 hover:shadow-[0_0_8px_0_rgba(59,130,246,0.10)] transition-all"
+                      ].join(' ')}>
+                        <td className="px-4 py-3 text-xl">{emoji}</td>
+                        <td className="px-4 py-3 text-white font-medium">{gasto.nombre}</td>
+                        <td className="px-4 py-3 text-red-500 font-bold">-${gasto.monto.toFixed(2)}</td>
+                        <td className="px-4 py-3">
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${badgeColor} category-bounce-glow`}>{gasto.categoria}</span>
+                        </td>
+                        <td className="px-4 py-3 text-gray-400">{getFechaFormateada(gasto.fecha)}</td>
+                        <td className="px-4 py-3">
+                          <div className="flex gap-1">
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(gasto)}>
+                              <Edit className="h-4 w-4" />
+                              <span className="sr-only">Editar</span>
+                            </Button>
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDeleteGasto(gasto.id)}>
+                              <Trash className="h-4 w-4" />
+                              <span className="sr-only">Eliminar</span>
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Modal de edición */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
@@ -603,7 +605,7 @@ export function GastosDiarios() {
                 id="edit-nombre"
                 className="col-span-3 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-white"
                 value={editFields.nombre || ""}
-                onChange={e => setEditFields({ ...editFields, nombre: e.target.value })}
+                onChange={e => setEditFields((fields: any) => ({ ...fields, nombre: e.target.value }))}
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -613,7 +615,7 @@ export function GastosDiarios() {
                 type="number"
                 className="col-span-3 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-white"
                 value={editFields.monto || ""}
-                onChange={e => setEditFields({ ...editFields, monto: e.target.value })}
+                onChange={e => setEditFields((fields: any) => ({ ...fields, monto: e.target.value }))}
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -625,10 +627,10 @@ export function GastosDiarios() {
                 onChange={e => {
                   if (e.target.value === "__nueva__") {
                     setCreandoCategoria(true)
-                    setEditFields({ ...editFields, categoria: "" })
+                    setEditFields((fields: any) => ({ ...fields, categoria: "" }))
                   } else {
                     setCreandoCategoria(false)
-                    setEditFields({ ...editFields, categoria: e.target.value })
+                    setEditFields((fields: any) => ({ ...fields, categoria: e.target.value }))
                   }
                 }}
               >
@@ -679,7 +681,7 @@ export function GastosDiarios() {
                         return
                       }
                       await fetchCategorias();
-                      setEditFields(fields => ({ ...fields, categoria: nuevaCategoria.trim() }))
+                      setEditFields((fields: any) => ({ ...fields, categoria: nuevaCategoria.trim() }))
                       setNuevaCategoria("")
                       setCreandoCategoria(false)
                       setError(null)
@@ -699,7 +701,7 @@ export function GastosDiarios() {
                 type="date"
                 className="col-span-3 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-white"
                 value={editFields.fecha ? (typeof editFields.fecha === 'string' ? editFields.fecha : new Date(editFields.fecha.getTime() - editFields.fecha.getTimezoneOffset() * 60000).toISOString().split('T')[0]) : ""}
-                onChange={e => setEditFields({ ...editFields, fecha: e.target.value })}
+                onChange={e => setEditFields((fields: any) => ({ ...fields, fecha: e.target.value }))}
               />
             </div>
             {error && <div className="text-red-400 text-sm col-span-4">{error}</div>}

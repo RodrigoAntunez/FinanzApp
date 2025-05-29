@@ -277,22 +277,25 @@ export function GastosDiarios() {
   const totalesPorCategoria = calcularTotalesPorCategoria(gastos)
 
   const getFechaFormateada = (fecha: any) => {
-    let fechaValida = null;
-    if (typeof fecha === 'string' && fecha) {
-      const d = new Date(fecha + 'T00:00:00');
-      if (!isNaN(d.getTime())) fechaValida = d;
-    } else if (fecha instanceof Date && !isNaN(fecha.getTime())) {
-      fechaValida = fecha;
+    // Si es string tipo 'YYYY-MM-DD', mostrarla tal cual en local
+    if (typeof fecha === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+      // Formatear a 'd de MMMM' en local
+      const [year, month, day] = fecha.split('-')
+      const dateObj = new Date(Number(year), Number(month) - 1, Number(day))
+      return format(dateObj, "d 'de' MMMM", { locale: es })
     }
-    // Si no hay fecha válida, usar la fecha de Buenos Aires actual
-    if (!fechaValida) {
-      const ahora = new Date();
-      const offset = -3 * 60; // Buenos Aires UTC-3
-      const local = new Date(ahora.getTime() + (offset - ahora.getTimezoneOffset()) * 60000);
-      fechaValida = local;
+    // Si es string ISO, convertir a Date
+    if (typeof fecha === 'string') {
+      const d = new Date(fecha)
+      if (!isNaN(d.getTime())) return format(d, "d 'de' MMMM", { locale: es })
     }
-    return format(fechaValida, "d 'de' MMMM", { locale: es });
-  };
+    // Si es Date
+    if (fecha instanceof Date && !isNaN(fecha.getTime())) {
+      return format(fecha, "d 'de' MMMM", { locale: es })
+    }
+    // Si no hay fecha válida, mostrar vacío
+    return ''
+  }
 
   return (
     <div className="space-y-6">

@@ -18,6 +18,15 @@ export async function GET() {
   return NextResponse.json(gastosDiarios)
 }
 
+function parseFechaLocal(fecha: string | Date) {
+  if (typeof fecha === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+    // Parsear como fecha local (no UTC)
+    const [year, month, day] = fecha.split('-')
+    return new Date(Number(year), Number(month) - 1, Number(day))
+  }
+  return new Date(fecha)
+}
+
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions)
   if (!session || !session.user?.email) {
@@ -40,7 +49,7 @@ export async function POST(request: Request) {
       nombre,
       monto: Number(monto),
       categoria,
-      fecha: new Date(fecha),
+      fecha: parseFechaLocal(fecha),
     },
   })
   return NextResponse.json(gastoDiario, { status: 201 })
@@ -77,7 +86,7 @@ export async function PUT(request: Request) {
       nombre,
       monto: Number(monto),
       categoria,
-      fecha: new Date(fechaFinal),
+      fecha: parseFechaLocal(fechaFinal),
     },
   })
 

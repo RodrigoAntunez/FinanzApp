@@ -68,6 +68,9 @@ export async function PUT(request: Request) {
     fechaFinal = gastoOriginal?.fecha
   }
 
+  // LOG para depuración
+  console.log('PUT /api/gastos-diarios', { id, nombre, monto, categoria, fechaRecibida: fecha, fechaFinal })
+
   const gastoDiario = await prisma.gastoDiario.update({
     where: { id },
     data: {
@@ -77,6 +80,10 @@ export async function PUT(request: Request) {
       fecha: new Date(fechaFinal),
     },
   })
+
+  // LOG para depuración
+  console.log('Gasto actualizado:', gastoDiario)
+
   return NextResponse.json(gastoDiario)
 }
 

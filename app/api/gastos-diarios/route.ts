@@ -62,13 +62,19 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Falta el id" }, { status: 400 })
   }
 
+  let fechaFinal = fecha
+  if (!fechaFinal) {
+    const gastoOriginal = await prisma.gastoDiario.findUnique({ where: { id } })
+    fechaFinal = gastoOriginal?.fecha
+  }
+
   const gastoDiario = await prisma.gastoDiario.update({
     where: { id },
     data: {
       nombre,
       monto: Number(monto),
       categoria,
-      fecha: new Date(fecha),
+      fecha: new Date(fechaFinal),
     },
   })
   return NextResponse.json(gastoDiario)

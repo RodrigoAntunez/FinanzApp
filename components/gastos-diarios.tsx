@@ -279,15 +279,16 @@ export function GastosDiarios() {
   const getFechaFormateada = (fecha: any) => {
     // Si es string tipo 'YYYY-MM-DD', mostrarla tal cual en local
     if (typeof fecha === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
-      // Formatear a 'd de MMMM' en local
       const [year, month, day] = fecha.split('-')
       const dateObj = new Date(Number(year), Number(month) - 1, Number(day))
       return format(dateObj, "d 'de' MMMM", { locale: es })
     }
-    // Si es string ISO, convertir a Date
-    if (typeof fecha === 'string') {
-      const d = new Date(fecha)
-      if (!isNaN(d.getTime())) return format(d, "d 'de' MMMM", { locale: es })
+    // Si es string ISO tipo 'YYYY-MM-DDTHH:mm:ss.sssZ', extraer la parte de la fecha
+    if (typeof fecha === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(fecha)) {
+      const soloFecha = fecha.slice(0, 10)
+      const [year, month, day] = soloFecha.split('-')
+      const dateObj = new Date(Number(year), Number(month) - 1, Number(day))
+      return format(dateObj, "d 'de' MMMM", { locale: es })
     }
     // Si es Date
     if (fecha instanceof Date && !isNaN(fecha.getTime())) {

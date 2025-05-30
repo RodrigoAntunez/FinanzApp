@@ -1,9 +1,9 @@
 import { getServerSession } from "next-auth"
 import { prisma } from "@/lib/prisma"
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
 import { authOptions } from "../auth/[...nextauth]/route"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions)
   if (!session || !session.user?.email) {
     return NextResponse.json({ error: "No autenticado" }, { status: 401 })
@@ -14,6 +14,27 @@ export async function GET() {
     return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 })
   }
 
+  // Soportar query params para rango semanal
+  const { searchParams } = new URL(request.url)
+  const desde = searchParams.get("desde")
+  const hasta = searchParams.get("hasta")
+
+  if (desde && hasta) {
+    // Buscar gastos entre las fechas (inclusive)
+    const gastosDiarios = await prisma.gastoDiario.findMany({
+      where: {
+        userId: user.id,
+        fecha: {
+          gte: new Date(desde),
+          lte: new Date(hasta + 'T23:59:59.999'),
+        },
+      },
+      orderBy: { fecha: "asc" },
+    })
+    return NextResponse.json(gastosDiarios)
+  }
+
+  // Si no hay query params, devolver todos los gastos
   const gastosDiarios = await prisma.gastoDiario.findMany({ where: { userId: user.id } })
   return NextResponse.json(gastosDiarios)
 }

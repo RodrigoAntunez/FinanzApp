@@ -22,6 +22,7 @@ import { Label } from "@/components/ui/label"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
+import { ResumenGastosSemana } from "@/components/resumen-gastos-semana"
 
 // Mapeo de categorías a iconos
 const categoriaIcons: { [key: string]: any } = {
@@ -300,6 +301,8 @@ export function GastosDiarios() {
 
   return (
     <div className="space-y-6">
+      {/* Calendario semanal de gastos */}
+      <ResumenGastosSemana />
       {/* Header con resumen */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
         <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">

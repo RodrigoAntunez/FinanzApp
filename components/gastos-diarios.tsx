@@ -22,7 +22,7 @@ import { Label } from "@/components/ui/label"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
-import { ResumenGastosSemana } from "@/components/resumen-gastos-semana"
+import { ResumenGastosSemana } from "./resumen-gastos-semana"
 
 // Mapeo de categorías a iconos
 const categoriaIcons: { [key: string]: any } = {

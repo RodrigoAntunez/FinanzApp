@@ -39,15 +39,6 @@ export async function GET(request: NextRequest) {
   return NextResponse.json(gastosDiarios)
 }
 
-function parseFechaLocal(fecha: string | Date) {
-  if (typeof fecha === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
-    // Parsear como fecha local (no UTC)
-    const [year, month, day] = fecha.split('-')
-    return new Date(Number(year), Number(month) - 1, Number(day))
-  }
-  return new Date(fecha)
-}
-
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions)
   if (!session || !session.user?.email) {
@@ -64,13 +55,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Faltan campos obligatorios" }, { status: 400 })
   }
 
+  // Guardar fecha como string plano
   const gastoDiario = await prisma.gastoDiario.create({
     data: {
       userId: user.id,
       nombre,
       monto: Number(monto),
       categoria,
-      fecha: parseFechaLocal(fecha),
+      fecha: fecha, // string
     },
   })
   return NextResponse.json(gastoDiario, { status: 201 })
@@ -98,22 +90,16 @@ export async function PUT(request: Request) {
     fechaFinal = gastoOriginal?.fecha
   }
 
-  // LOG para depuración
-  console.log('PUT /api/gastos-diarios', { id, nombre, monto, categoria, fechaRecibida: fecha, fechaFinal })
-
+  // Guardar fecha como string plano
   const gastoDiario = await prisma.gastoDiario.update({
     where: { id },
     data: {
       nombre,
       monto: Number(monto),
       categoria,
-      fecha: parseFechaLocal(fechaFinal),
+      fecha: fechaFinal, // string
     },
   })
-
-  // LOG para depuración
-  console.log('Gasto actualizado:', gastoDiario)
-
   return NextResponse.json(gastoDiario)
 }
 

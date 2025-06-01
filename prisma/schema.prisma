@@ -105,7 +105,7 @@ model GastoDiario {
   nombre    String
   monto     Float
   categoria String
-  fecha     DateTime
+  fecha     String
   user      User     @relation(fields: [userId], references: [id])
 }
 

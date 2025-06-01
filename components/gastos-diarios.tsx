@@ -278,22 +278,23 @@ export function GastosDiarios() {
   const totalesPorCategoria = calcularTotalesPorCategoria(gastos)
 
   const getFechaFormateada = (fecha: any) => {
-    // Si es string tipo 'YYYY-MM-DD', mostrarla tal cual en local
+    // Si es string tipo 'YYYY-MM-DD', mostrar como DD/MM/YYYY
     if (typeof fecha === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
       const [year, month, day] = fecha.split('-')
-      const dateObj = new Date(Number(year), Number(month) - 1, Number(day))
-      return format(dateObj, "d 'de' MMMM", { locale: es })
+      return `${day}/${month}/${year}`
     }
     // Si es string ISO tipo 'YYYY-MM-DDTHH:mm:ss.sssZ', extraer la parte de la fecha
     if (typeof fecha === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(fecha)) {
       const soloFecha = fecha.slice(0, 10)
       const [year, month, day] = soloFecha.split('-')
-      const dateObj = new Date(Number(year), Number(month) - 1, Number(day))
-      return format(dateObj, "d 'de' MMMM", { locale: es })
+      return `${day}/${month}/${year}`
     }
     // Si es Date
     if (fecha instanceof Date && !isNaN(fecha.getTime())) {
-      return format(fecha, "d 'de' MMMM", { locale: es })
+      const year = fecha.getFullYear()
+      const month = (fecha.getMonth() + 1).toString().padStart(2, '0')
+      const day = fecha.getDate().toString().padStart(2, '0')
+      return `${day}/${month}/${year}`
     }
     // Si no hay fecha válida, mostrar vacío
     return ''

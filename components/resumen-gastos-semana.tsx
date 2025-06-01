@@ -43,8 +43,22 @@ export function ResumenGastosSemana() {
 
   const gastosPorDia = diasSemana.map((fecha) => {
     const gastosDelDia = gastos.filter(g => {
-      const fechaGasto = typeof g.fecha === 'string' ? parseISO(g.fecha) : new Date(g.fecha)
-      return isSameDay(fechaGasto, fecha)
+      // Comparar por string plano
+      if (typeof g.fecha === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(g.fecha)) {
+        const [year, month, day] = g.fecha.split('-')
+        return fecha.getFullYear() === Number(year) && (fecha.getMonth() + 1) === Number(month) && fecha.getDate() === Number(day)
+      }
+      // Si es string ISO
+      if (typeof g.fecha === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(g.fecha)) {
+        const soloFecha = g.fecha.slice(0, 10)
+        const [year, month, day] = soloFecha.split('-')
+        return fecha.getFullYear() === Number(year) && (fecha.getMonth() + 1) === Number(month) && fecha.getDate() === Number(day)
+      }
+      // Si es Date
+      if (g.fecha instanceof Date && !isNaN(g.fecha.getTime())) {
+        return isSameDay(g.fecha, fecha)
+      }
+      return false
     })
     const total = gastosDelDia.reduce((sum, g) => sum + Number(g.monto), 0)
     return { fecha, gastos: gastosDelDia, total }

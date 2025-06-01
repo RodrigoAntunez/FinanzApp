@@ -20,13 +20,13 @@ export async function GET(request: NextRequest) {
   const hasta = searchParams.get("hasta")
 
   if (desde && hasta) {
-    // Buscar gastos entre las fechas (inclusive)
+    // Buscar gastos entre las fechas (inclusive) usando strings
     const gastosDiarios = await prisma.gastoDiario.findMany({
       where: {
         userId: user.id,
         fecha: {
-          gte: new Date(desde),
-          lte: new Date(hasta + 'T23:59:59.999'),
+          gte: desde,
+          lte: hasta,
         },
       },
       orderBy: { fecha: "asc" },

@@ -77,11 +77,17 @@ export function ResumenGastosSemana() {
             <div className="font-semibold text-blue-300 text-sm mb-1">{format(fecha, "EEEE", { locale: es })}</div>
             <div className="text-xs text-gray-400 mb-2">{format(fecha, "d/M")}</div>
             <div className="text-lg font-bold text-blue-400 mb-1">${total.toFixed(2)}</div>
-            <ul className="text-xs text-gray-200 space-y-1 w-full">
-              {gastos.map(g => (
-                <li key={g.id} className="truncate">- {g.nombre} <span className="text-rose-400 font-semibold">${Number(g.monto).toFixed(2)}</span></li>
-              ))}
-            </ul>
+            {gastos.length > 0 && (
+              <button
+                className="text-xs text-blue-400 hover:text-blue-200"
+                onClick={() => {
+                  // Aquí puedes implementar la lógica para desplegar la lista de gastos
+                  alert(`Gastos del día ${format(fecha, "d/M")}: ${gastos.map(g => `${g.nombre} - $${g.monto}`).join(", ")}`);
+                }}
+              >
+                Ver gastos
+              </button>
+            )}
           </div>
         ))}
       </div>

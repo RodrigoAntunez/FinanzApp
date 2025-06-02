@@ -301,7 +301,7 @@ export function GastosDiarios() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl w-full mx-auto">
       {/* Header con resumen */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
         <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
@@ -347,11 +347,9 @@ export function GastosDiarios() {
           </CardContent>
         </Card>
       </div>
-      {/* Calendario semanal de gastos centrado */}
-      <div className="flex justify-center mb-6">
-        <div className="max-w-4xl w-full">
-          <ResumenGastosSemana />
-        </div>
+      {/* Calendario semanal de gastos centrado y expandido */}
+      <div className="mb-6">
+        <ResumenGastosSemana />
       </div>
       {/* Tabla moderna de gastos diarios */}
       <div className="overflow-x-auto w-full">

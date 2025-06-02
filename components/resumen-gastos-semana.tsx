@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react"
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, isSameDay, parseISO } from "date-fns"
 import { es } from "date-fns/locale"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 export function ResumenGastosSemana() {
   const [gastos, setGastos] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [semanaActual, setSemanaActual] = useState(new Date())
+  const [modalOpen, setModalOpen] = useState(false)
+  const [gastosDiaSeleccionado, setGastosDiaSeleccionado] = useState<any[]>([])
+  const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(null)
 
   // Calcular lunes y domingo de la semana actual
   const lunes = startOfWeek(semanaActual, { weekStartsOn: 1 })
@@ -65,34 +69,66 @@ export function ResumenGastosSemana() {
   })
 
   return (
-    <div className="bg-[#181c2a]/80 rounded-xl p-4 shadow-lg">
-      <div className="flex items-center justify-between mb-4">
-        <button onClick={() => setSemanaActual(subWeeks(semanaActual, 1))} className="text-blue-400 hover:text-blue-200">← Semana anterior</button>
-        <div className="font-bold text-lg text-white">Semana del {format(lunes, "d 'al' d 'de' MMMM yyyy", { locale: es })}</div>
-        <button onClick={() => setSemanaActual(addWeeks(semanaActual, 1))} className="text-blue-400 hover:text-blue-200">Semana siguiente →</button>
+    <div className="max-w-7xl w-full mx-auto">
+      <div className="bg-[#181c2a]/80 rounded-xl p-4 shadow-lg">
+        <div className="flex items-center justify-between mb-4">
+          <button onClick={() => setSemanaActual(subWeeks(semanaActual, 1))} className="text-blue-400 hover:text-blue-200">← Semana anterior</button>
+          <div className="font-bold text-lg text-white">Semana del {format(lunes, "d 'al' d 'de' MMMM yyyy", { locale: es })}</div>
+          <button onClick={() => setSemanaActual(addWeeks(semanaActual, 1))} className="text-blue-400 hover:text-blue-200">Semana siguiente →</button>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-7 gap-2">
+          {gastosPorDia.map(({ fecha, gastos, total }, idx) => (
+            <div key={idx} className="bg-[#1e293b]/80 rounded-lg p-2 flex flex-col items-center min-h-[120px]">
+              <div className="font-semibold text-blue-300 text-sm mb-1">{format(fecha, "EEEE", { locale: es })}</div>
+              <div className="text-xs text-gray-400 mb-2">{format(fecha, "d/M")}</div>
+              <div className="text-lg font-bold text-blue-400 mb-1">${total.toFixed(2)}</div>
+              {gastos.length > 0 && (
+                <button
+                  className="text-xs text-blue-400 hover:text-blue-200"
+                  onClick={() => {
+                    setGastosDiaSeleccionado(gastos)
+                    setFechaSeleccionada(fecha)
+                    setModalOpen(true)
+                  }}
+                >
+                  Ver gastos
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+        {loading && <div className="text-blue-400 mt-4">Cargando...</div>}
+        {error && <div className="text-red-400 mt-4">{error}</div>}
       </div>
-      <div className="grid grid-cols-7 gap-2">
-        {gastosPorDia.map(({ fecha, gastos, total }, idx) => (
-          <div key={idx} className="bg-[#1e293b]/80 rounded-lg p-2 flex flex-col items-center min-h-[120px]">
-            <div className="font-semibold text-blue-300 text-sm mb-1">{format(fecha, "EEEE", { locale: es })}</div>
-            <div className="text-xs text-gray-400 mb-2">{format(fecha, "d/M")}</div>
-            <div className="text-lg font-bold text-blue-400 mb-1">${total.toFixed(2)}</div>
-            {gastos.length > 0 && (
-              <button
-                className="text-xs text-blue-400 hover:text-blue-200"
-                onClick={() => {
-                  // Aquí puedes implementar la lógica para desplegar la lista de gastos
-                  alert(`Gastos del día ${format(fecha, "d/M")}: ${gastos.map(g => `${g.nombre} - $${g.monto}`).join(", ")}`);
-                }}
-              >
-                Ver gastos
-              </button>
-            )}
+      {/* Modal para mostrar los gastos del día seleccionado */}
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="bg-[#181c2a] text-white max-w-lg w-full">
+          <DialogHeader>
+            <DialogTitle>Gastos del día {fechaSeleccionada ? format(fechaSeleccionada, "EEEE d 'de' MMMM", { locale: es }) : ""}</DialogTitle>
+          </DialogHeader>
+          <div className="overflow-x-auto mt-2">
+            <table className="min-w-full text-sm rounded-xl overflow-hidden bg-[#181c2a]/80 border border-[#23204d]">
+              <thead>
+                <tr className="bg-blue-950/80 text-blue-200 border-b border-[#23204d]">
+                  <th className="px-4 py-3 text-left font-semibold">Nombre</th>
+                  <th className="px-4 py-3 text-left font-semibold">Monto</th>
+                  <th className="px-4 py-3 text-left font-semibold">Categoría</th>
+                </tr>
+              </thead>
+              <tbody>
+                {gastosDiaSeleccionado.map((gasto, idx) => (
+                  <tr key={gasto.id || idx} className={[idx % 2 === 0 ? "bg-[#101c3a]/80" : "bg-blue-950/40", "border-b border-[#23204d]"].join(' ')}>
+                    <td className="px-4 py-3 text-white font-medium">{gasto.nombre}</td>
+                    <td className="px-4 py-3 text-rose-400 font-bold">-${Number(gasto.monto).toFixed(2)}</td>
+                    <td className="px-4 py-3 text-blue-300">{gasto.categoria}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {gastosDiaSeleccionado.length === 0 && <div className="text-gray-400 text-center py-4">No hay gastos para este día.</div>}
           </div>
-        ))}
-      </div>
-      {loading && <div className="text-blue-400 mt-4">Cargando...</div>}
-      {error && <div className="text-red-400 mt-4">{error}</div>}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 } 

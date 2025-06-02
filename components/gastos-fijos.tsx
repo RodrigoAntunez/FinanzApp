@@ -107,8 +107,25 @@ export function GastosFijos() {
       try {
         const res = await fetch("/api/gastos-fijos")
         if (!res.ok) throw new Error("Error al cargar los gastos fijos")
-        const data = await res.json()
-        setGastos(data)
+        let data = await res.json()
+        // Reset automático el primer día del mes
+        const hoy = new Date()
+        if (hoy.getDate() === 1) {
+          const gastosReseteados = await Promise.all(data.map(async (g: any) => {
+            if (g.cubierto) {
+              await fetch("/api/gastos-fijos", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ...g, cubierto: false }),
+              })
+              return { ...g, cubierto: false }
+            }
+            return g
+          }))
+          setGastos(gastosReseteados)
+        } else {
+          setGastos(data)
+        }
       } catch (err: any) {
         setError(err.message)
       } finally {
@@ -165,9 +182,20 @@ export function GastosFijos() {
     }
   }
 
-  // Función para manejar el cambio de estado de "cubierto"
-  const toggleCubierto = (id: number) => {
-    setGastos(gastos.map((gasto) => (gasto.id === id ? { ...gasto, cubierto: !gasto.cubierto } : gasto)))
+  // Marcar/desmarcar como cubierto y persistir en backend
+  const handleToggleCubierto = async (id: number, cubierto: boolean, gasto: any) => {
+    try {
+      const res = await fetch("/api/gastos-fijos", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...gasto, cubierto: !cubierto }),
+      })
+      if (!res.ok) throw new Error("Error al actualizar el gasto fijo")
+      const actualizado = await res.json()
+      setGastos(gastos => gastos.map(g => g.id === id ? actualizado : g))
+    } catch (err: any) {
+      setError(err.message)
+    }
   }
 
   // Calcular el total de gastos cubiertos y no cubiertos
@@ -190,9 +218,9 @@ export function GastosFijos() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6">
+        <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] p-2 sm:p-4 text-sm sm:text-base">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Home className="h-5 w-5 text-blue-400" />
@@ -206,7 +234,7 @@ export function GastosFijos() {
             <p className="text-sm text-gray-400 mt-1">Monto que ya juntaste</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+        <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] p-2 sm:p-4 text-sm sm:text-base">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Home className="h-5 w-5 text-red-400" />
@@ -220,7 +248,7 @@ export function GastosFijos() {
             <p className="text-sm text-gray-400 mt-1">Monto que resta juntar</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+        <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] p-2 sm:p-4 text-sm sm:text-base">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Home className="h-5 w-5 text-blue-300" />
@@ -395,93 +423,95 @@ export function GastosFijos() {
           </Dialog>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm rounded-xl overflow-hidden bg-[#181c2a]/80 border border-[#23204d]">
-              <thead>
-                <tr className="bg-blue-950/80 text-blue-200 border-b border-[#23204d]">
-                  <th className="px-4 py-3 text-left font-semibold">Icono</th>
-                  <th className="px-4 py-3 text-left font-semibold">Nombre</th>
-                  <th className="px-4 py-3 text-left font-semibold">Monto</th>
-                  <th className="px-4 py-3 text-left font-semibold">Categoría</th>
-                  <th className="px-4 py-3 text-left font-semibold">Cuotas</th>
-                  <th className="px-4 py-3 text-left font-semibold">Fecha</th>
-                  <th className="px-4 py-3 text-left font-semibold">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {gastos.map((gasto, idx) => {
-                  const Icon = categoriaIcons[gasto.categoria] || Circle
-                  // Unifico la obtención de categorías únicas
-                  const categoriasUnicas = [...new Set(gastos.map(g => g.categoria))]
-                  const badgeColor = getColorCategoriaPorIndice(gasto.categoria, categoriasUnicas)
-                  // Marcar como cubierto
-                  const handleToggleCubierto = (id: number) => {
-                    setGastos(gastos.map((g) => g.id === id ? { ...g, cubierto: !g.cubierto } : g))
-                  }
-                  // Abrir modal de edición
-                  const handleEdit = (gasto: any) => {
-                    setGastoEdit(gasto)
-                    setEditFields({
-                      nombre: gasto.nombre,
-                      monto: gasto.monto,
-                      categoria: gasto.categoria,
-                      fechaPago: gasto.fechaPago,
-                      cuotas: gasto.cuotas,
-                    })
-                    setEditOpen(true)
-                  }
-                  return (
-                    <tr key={gasto.id} className={cn(
-                      idx % 2 === 0 ? "bg-[#101c3a]/80" : "bg-blue-950/40",
-                      "border-b border-[#23204d] hover:bg-[#23204d]/80 hover:shadow-[0_0_8px_0_rgba(59,130,246,0.10)] transition-all"
-                    )}>
-                      <td className="px-4 py-3">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className={cn(
-                            "h-8 w-8 rounded-full",
-                            gasto.cubierto ? "text-green-500 hover:text-green-600" : "text-gray-500 hover:text-gray-400",
-                          )}
-                          onClick={() => handleToggleCubierto(gasto.id)}
-                        >
-                          <span
+          <div className="overflow-x-auto w-full">
+            <Card className="bg-[#181c2a]/80 border-none min-w-[600px] sm:min-w-0 p-2 sm:p-6 text-sm sm:text-base">
+              <Table className="min-w-full text-sm rounded-xl overflow-hidden bg-[#181c2a]/80 border border-[#23204d]">
+                <thead>
+                  <tr className="bg-blue-950/80 text-blue-200 border-b border-[#23204d]">
+                    <th className="px-4 py-3 text-left font-semibold">Icono</th>
+                    <th className="px-4 py-3 text-left font-semibold">Nombre</th>
+                    <th className="px-4 py-3 text-left font-semibold">Monto</th>
+                    <th className="px-4 py-3 text-left font-semibold">Categoría</th>
+                    <th className="px-4 py-3 text-left font-semibold">Cuotas</th>
+                    <th className="px-4 py-3 text-left font-semibold">Fecha</th>
+                    <th className="px-4 py-3 text-left font-semibold">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {gastos.map((gasto, idx) => {
+                    const Icon = categoriaIcons[gasto.categoria] || Circle
+                    // Unifico la obtención de categorías únicas
+                    const categoriasUnicas = [...new Set(gastos.map(g => g.categoria))]
+                    const badgeColor = getColorCategoriaPorIndice(gasto.categoria, categoriasUnicas)
+                    // Marcar como cubierto
+                    const handleToggleCubierto = (id: number, cubierto: boolean, gasto: any) => {
+                      handleToggleCubierto(id, cubierto, gasto)
+                    }
+                    // Abrir modal de edición
+                    const handleEdit = (gasto: any) => {
+                      setGastoEdit(gasto)
+                      setEditFields({
+                        nombre: gasto.nombre,
+                        monto: gasto.monto,
+                        categoria: gasto.categoria,
+                        fechaPago: gasto.fechaPago,
+                        cuotas: gasto.cuotas,
+                      })
+                      setEditOpen(true)
+                    }
+                    return (
+                      <tr key={gasto.id} className={cn(
+                        idx % 2 === 0 ? "bg-[#101c3a]/80" : "bg-blue-950/40",
+                        "border-b border-[#23204d] hover:bg-[#23204d]/80 hover:shadow-[0_0_8px_0_rgba(59,130,246,0.10)] transition-all"
+                      )}>
+                        <td className="px-4 py-3">
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             className={cn(
-                              "inline-block transition-transform duration-300",
-                              gasto.cubierto && "animate-check-pop"
+                              "h-8 w-8 rounded-full",
+                              gasto.cubierto ? "text-green-500 hover:text-green-600" : "text-gray-500 hover:text-gray-400",
                             )}
+                            onClick={() => handleToggleCubierto(gasto.id, gasto.cubierto, gasto)}
                           >
-                            {gasto.cubierto ? <CheckCircle2 className="h-5 w-5" /> : <Circle className="h-5 w-5" />}
-                          </span>
-                          <span className="sr-only">
-                            {gasto.cubierto ? "Marcar como no cubierto" : "Marcar como cubierto"}
-                          </span>
-                        </Button>
-                      </td>
-                      <td className={cn("px-4 py-3 text-white font-medium", gasto.cubierto ? "line-through text-gray-400" : "")}>{gasto.nombre}</td>
-                      <td className={gasto.cubierto ? "px-4 py-3 text-gray-400" : "px-4 py-3 text-red-500 font-bold"}>${gasto.monto.toFixed(2)}</td>
-                      <td className={gasto.cubierto ? "px-4 py-3 text-gray-400" : "px-4 py-3"}>
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${badgeColor} category-bounce-glow`}>{gasto.categoria}</span>
-                      </td>
-                      <td className={gasto.cubierto ? "px-4 py-3 text-gray-400 text-center" : "px-4 py-3 text-center"}>{gasto.categoria === "Tarjeta de crédito" && gasto.cuotas ? gasto.cuotas : "-"}</td>
-                      <td className={gasto.cubierto ? "px-4 py-3 text-gray-400" : "px-4 py-3 text-gray-400"}>{format(gasto.fechaPago, "d 'de' MMMM", { locale: es })}</td>
-                      <td className="px-4 py-3">
-                        <div className="flex gap-1">
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(gasto)}>
-                            <Edit className="h-4 w-4" />
-                            <span className="sr-only">Editar</span>
+                            <span
+                              className={cn(
+                                "inline-block transition-transform duration-300",
+                                gasto.cubierto && "animate-check-pop"
+                              )}
+                            >
+                              {gasto.cubierto ? <CheckCircle2 className="h-5 w-5" /> : <Circle className="h-5 w-5" />}
+                            </span>
+                            <span className="sr-only">
+                              {gasto.cubierto ? "Marcar como no cubierto" : "Marcar como cubierto"}
+                            </span>
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDeleteGasto(gasto.id)}>
-                            <Trash className="h-4 w-4" />
-                            <span className="sr-only">Eliminar</span>
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+                        </td>
+                        <td className={cn("px-4 py-3 text-white font-medium", gasto.cubierto ? "line-through text-gray-400" : "")}>{gasto.nombre}</td>
+                        <td className={gasto.cubierto ? "px-4 py-3 text-gray-400" : "px-4 py-3 text-red-500 font-bold"}>${gasto.monto.toFixed(2)}</td>
+                        <td className={gasto.cubierto ? "px-4 py-3 text-gray-400" : "px-4 py-3"}>
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${badgeColor} category-bounce-glow`}>{gasto.categoria}</span>
+                        </td>
+                        <td className={gasto.cubierto ? "px-4 py-3 text-gray-400 text-center" : "px-4 py-3 text-center"}>{gasto.categoria === "Tarjeta de crédito" && gasto.cuotas ? gasto.cuotas : "-"}</td>
+                        <td className={gasto.cubierto ? "px-4 py-3 text-gray-400" : "px-4 py-3 text-gray-400"}>{format(gasto.fechaPago, "d 'de' MMMM", { locale: es })}</td>
+                        <td className="px-4 py-3">
+                          <div className="flex gap-1">
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(gasto)}>
+                              <Edit className="h-4 w-4" />
+                              <span className="sr-only">Editar</span>
+                            </Button>
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDeleteGasto(gasto.id)}>
+                              <Trash className="h-4 w-4" />
+                              <span className="sr-only">Eliminar</span>
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
+            </Card>
           </div>
         </CardContent>
       </Card>

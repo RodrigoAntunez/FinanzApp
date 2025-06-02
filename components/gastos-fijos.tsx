@@ -443,10 +443,6 @@ export function GastosFijos() {
                     // Unifico la obtención de categorías únicas
                     const categoriasUnicas = [...new Set(gastos.map(g => g.categoria))]
                     const badgeColor = getColorCategoriaPorIndice(gasto.categoria, categoriasUnicas)
-                    // Marcar como cubierto
-                    const handleToggleCubierto = (id: number, cubierto: boolean, gasto: any) => {
-                      handleToggleCubierto(id, cubierto, gasto)
-                    }
                     // Abrir modal de edición
                     const handleEdit = (gasto: any) => {
                       setGastoEdit(gasto)

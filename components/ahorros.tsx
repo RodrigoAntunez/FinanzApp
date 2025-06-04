@@ -244,7 +244,7 @@ export function Ahorros() {
           </CardHeader>
           <CardContent className="p-2 sm:p-4">
             <div className="text-2xl sm:text-3xl font-bold text-blue-400">
-              ${totalGeneral.toFixed(2)}
+              ${totalGeneral.toLocaleString()}
             </div>
             <p className="text-xs sm:text-sm text-gray-400 mt-1">Suma de todos los ahorros</p>
           </CardContent>
@@ -453,7 +453,7 @@ export function Ahorros() {
                           </div>
                         )}
                       </td>
-                      <td className="px-2 sm:px-4 py-2 sm:py-3 text-green-400 font-bold">+${ahorro.monto.toFixed(2)}</td>
+                      <td className="px-2 sm:px-4 py-2 sm:py-3 text-green-400 font-bold">+${ahorro.monto.toLocaleString()}</td>
                       <td className="px-2 sm:px-4 py-2 sm:py-3">
                         <span className={`px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-semibold ${badgeColor} category-bounce-glow`}>{ahorro.categoria}</span>
                       </td>

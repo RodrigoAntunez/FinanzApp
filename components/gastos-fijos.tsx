@@ -229,7 +229,7 @@ export function GastosFijos() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-green-500">
-              ${totalCubierto.toFixed(2)}
+              ${totalCubierto.toLocaleString()}
             </div>
             <p className="text-sm text-gray-400 mt-1">Monto que ya juntaste</p>
           </CardContent>
@@ -243,7 +243,7 @@ export function GastosFijos() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-red-500">
-              ${totalNoCubierto.toFixed(2)}
+              ${totalNoCubierto.toLocaleString()}
             </div>
             <p className="text-sm text-gray-400 mt-1">Monto que resta juntar</p>
           </CardContent>
@@ -257,7 +257,7 @@ export function GastosFijos() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-blue-400">
-              ${totalGastos.toFixed(2)}
+              ${totalGastos.toLocaleString()}
             </div>
             <p className="text-sm text-gray-400 mt-1">Suma de todos los gastos</p>
           </CardContent>
@@ -484,7 +484,7 @@ export function GastosFijos() {
                           </Button>
                         </td>
                         <td className={cn("px-4 py-3 text-white font-medium", gasto.cubierto ? "line-through text-gray-400" : "")}>{gasto.nombre}</td>
-                        <td className={gasto.cubierto ? "px-4 py-3 text-gray-400" : "px-4 py-3 text-red-500 font-bold"}>${gasto.monto.toFixed(2)}</td>
+                        <td className={gasto.cubierto ? "px-4 py-3 text-gray-400" : "px-4 py-3 text-red-500 font-bold"}>${gasto.monto.toLocaleString()}</td>
                         <td className={gasto.cubierto ? "px-4 py-3 text-gray-400" : "px-4 py-3"}>
                           <span className={`px-3 py-1 rounded-full text-xs font-semibold ${badgeColor} category-bounce-glow`}>{gasto.categoria}</span>
                         </td>

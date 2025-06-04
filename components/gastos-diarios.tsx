@@ -61,7 +61,8 @@ const categoriaEmojis: { [key: string]: string } = {
   "Servicios": "💡",
   "Suscripciones": "📺",
   "Veterinaria": "🏥",
-  "Coche": "🚗",
+  "Auto": "🚗",
+  "Salida": "🎉",
   "Otros": "💸"
 }
 
@@ -313,7 +314,7 @@ export function GastosDiarios() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              ${totalGeneral.toFixed(2)}
+              ${totalGeneral.toLocaleString()}
             </div>
             <p className="text-sm text-gray-400 mt-1">Total de gastos este mes</p>
           </CardContent>
@@ -327,7 +328,7 @@ export function GastosDiarios() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              ${gastos.length > 0 ? (totalGeneral / gastos.length).toFixed(2) : "0.00"}
+              ${gastos.length > 0 ? (totalGeneral / gastos.length).toLocaleString() : "0.00"}
             </div>
             <p className="text-sm text-gray-400 mt-1">Gasto promedio diario</p>
           </CardContent>
@@ -341,7 +342,7 @@ export function GastosDiarios() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              ${gastos.length > 0 ? gastos.reduce((max, gasto) => Math.max(max, Number(gasto.monto) || 0), 0).toFixed(2) : "0.00"}
+              ${gastos.length > 0 ? gastos.reduce((max, gasto) => Math.max(max, Number(gasto.monto) || 0), 0).toLocaleString() : "0.00"}
             </div>
             <p className="text-sm text-gray-400 mt-1">Gasto máximo registrado</p>
           </CardContent>
@@ -573,7 +574,9 @@ export function GastosDiarios() {
                       ].join(' ')}>
                         <td className="px-4 py-3 text-xl">{emoji}</td>
                         <td className="px-4 py-3 text-white font-medium">{gasto.nombre}</td>
-                        <td className="px-4 py-3 text-red-500 font-bold">-${gasto.monto.toFixed(2)}</td>
+                        <td className="px-4 py-3 text-red-500 font-bold">
+                          ${gasto.monto.toLocaleString()}
+                        </td>
                         <td className="px-4 py-3">
                           <span className={`px-3 py-1 rounded-full text-xs font-semibold ${badgeColor} category-bounce-glow`}>{gasto.categoria}</span>
                         </td>

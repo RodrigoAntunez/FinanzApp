@@ -208,7 +208,7 @@ export function Ingresos() {
           </CardHeader>
           <CardContent className="p-2 sm:p-4">
             <div className="text-2xl sm:text-3xl font-bold text-green-400">
-              ${totalRecibido.toLocaleString()}
+              ${Math.round(totalRecibido).toLocaleString('de-DE')}
             </div>
             <p className="text-xs sm:text-sm text-gray-400 mt-1">Monto ya recibido</p>
           </CardContent>
@@ -222,7 +222,7 @@ export function Ingresos() {
           </CardHeader>
           <CardContent className="p-2 sm:p-4">
             <div className="text-2xl sm:text-3xl font-bold text-yellow-400">
-              ${totalPendiente.toLocaleString()}
+              ${Math.round(totalPendiente).toLocaleString('de-DE')}
             </div>
             <p className="text-xs sm:text-sm text-gray-400 mt-1">Monto por recibir</p>
           </CardContent>
@@ -236,7 +236,7 @@ export function Ingresos() {
           </CardHeader>
           <CardContent className="p-2 sm:p-4">
             <div className="text-2xl sm:text-3xl font-bold text-blue-400">
-              ${totalGeneral.toLocaleString()}
+              ${Math.round(totalGeneral).toLocaleString('de-DE')}
             </div>
             <p className="text-xs sm:text-sm text-gray-400 mt-1">Suma de todos los ingresos</p>
           </CardContent>
@@ -385,7 +385,7 @@ export function Ingresos() {
                         </div>
                       </td>
                       <td className="px-2 sm:px-4 py-2 sm:py-3 text-white font-medium">{ingreso.nombre}</td>
-                      <td className="px-2 sm:px-4 py-2 sm:py-3 text-green-500 font-bold">+${ingreso.monto.toLocaleString()}</td>
+                      <td className="px-2 sm:px-4 py-2 sm:py-3 text-green-500 font-bold">+${Math.round(ingreso.monto).toLocaleString('de-DE')}</td>
                       <td className="px-2 sm:px-4 py-2 sm:py-3">
                         <span className={`px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-semibold ${badgeColor} category-bounce-glow`}>{ingreso.categoria}</span>
                       </td>

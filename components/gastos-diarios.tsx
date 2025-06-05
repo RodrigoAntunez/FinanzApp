@@ -38,6 +38,7 @@ const categoriaEmojis: { [key: string]: string } = {
   "Combustible": "⛽️",
   "Supermercado": "🛒",
   "Alimentación": "🍕",
+  "Hamburguesa": "🍔",
   "Comida": "🍔",
   "Café": "☕️",
   "Farmacia": "💊",
@@ -314,7 +315,7 @@ export function GastosDiarios() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              ${totalGeneral.toLocaleString()}
+              ${Math.round(totalGeneral).toLocaleString('de-DE')}
             </div>
             <p className="text-sm text-gray-400 mt-1">Total de gastos este mes</p>
           </CardContent>
@@ -328,7 +329,7 @@ export function GastosDiarios() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              ${gastos.length > 0 ? (totalGeneral / gastos.length).toLocaleString() : "0.00"}
+              ${gastos.length > 0 ? Math.round(totalGeneral / gastos.length).toLocaleString('de-DE') : "0"}
             </div>
             <p className="text-sm text-gray-400 mt-1">Gasto promedio diario</p>
           </CardContent>
@@ -342,7 +343,7 @@ export function GastosDiarios() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              ${gastos.length > 0 ? gastos.reduce((max, gasto) => Math.max(max, Number(gasto.monto) || 0), 0).toLocaleString() : "0.00"}
+              ${gastos.length > 0 ? Math.round(gastos.reduce((max, gasto) => Math.max(max, Number(gasto.monto) || 0), 0)).toLocaleString('de-DE') : "0"}
             </div>
             <p className="text-sm text-gray-400 mt-1">Gasto máximo registrado</p>
           </CardContent>
@@ -575,7 +576,7 @@ export function GastosDiarios() {
                         <td className="px-4 py-3 text-xl">{emoji}</td>
                         <td className="px-4 py-3 text-white font-medium">{gasto.nombre}</td>
                         <td className="px-4 py-3 text-red-500 font-bold">
-                          ${gasto.monto.toLocaleString()}
+                          ${Math.round(gasto.monto).toLocaleString('de-DE')}
                         </td>
                         <td className="px-4 py-3">
                           <span className={`px-3 py-1 rounded-full text-xs font-semibold ${badgeColor} category-bounce-glow`}>{gasto.categoria}</span>

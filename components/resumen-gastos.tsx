@@ -85,7 +85,7 @@ export function ResumenGastos() {
             ))}
           </Pie>
           <Tooltip
-            formatter={(value) => [`$${value}`, "Monto"]}
+            formatter={(value) => [`$${Math.round(Number(value)).toLocaleString('de-DE')}`, "Monto"]}
             contentStyle={{ borderRadius: "8px", border: "1px solid #334155", background: "#0f172a", color: "#fff" }}
           />
           <Legend />

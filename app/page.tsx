@@ -109,18 +109,16 @@ export default function Home() {
           }
         >
           <div className="max-w-screen-xl w-full mx-auto flex flex-col items-center justify-center mt-4 md:mt-16 mb-4 md:mb-12 px-0 sm:px-4">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-center mb-2 md:mb-6 bg-gradient-to-r from-blue-400 via-slate-400 to-gray-300 text-transparent bg-clip-text">💸 Finanzas Personales 💰</h2>
-            <div className="w-full overflow-x-auto">
-              <Tabs value={tab} onValueChange={setTab}>
-                <TabsList className="flex min-w-[400px] sm:min-w-0 flex-nowrap justify-start sm:justify-center gap-1 md:gap-2 mt-2 bg-[#1e293b]/50 backdrop-blur-md rounded-xl p-1 border border-[#334155] shadow-lg overflow-x-auto">
-                  <TabsTrigger value="overview">Resumen</TabsTrigger>
-                  <TabsTrigger value="gastos-fijos">Gastos Fijos</TabsTrigger>
-                  <TabsTrigger value="gastos-diarios">Gastos Diarios</TabsTrigger>
-                  <TabsTrigger value="ingresos">Ingresos</TabsTrigger>
-                  <TabsTrigger value="ahorros">Ahorros</TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-center mb-2 md:mb-6 bg-gradient-to-r from-blue-400 via-slate-400 to-gray-300 text-transparent bg-clip-text">💸 Finanzas Personales ��</h2>
+            <Tabs value={tab} onValueChange={setTab}>
+              <TabsList className="flex min-w-[400px] sm:min-w-0 flex-nowrap justify-start sm:justify-center gap-1 md:gap-2 mt-2 bg-[#1e293b]/50 backdrop-blur-md rounded-xl p-1 border border-[#334155] shadow-lg overflow-x-auto">
+                <TabsTrigger value="overview">Resumen</TabsTrigger>
+                <TabsTrigger value="gastos-fijos">Gastos Fijos</TabsTrigger>
+                <TabsTrigger value="gastos-diarios">Gastos Diarios</TabsTrigger>
+                <TabsTrigger value="ingresos">Ingresos</TabsTrigger>
+                <TabsTrigger value="ahorros">Ahorros</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
           <Tabs value={tab} onValueChange={setTab}>
             <TabsContent value="overview" className="space-y-4">

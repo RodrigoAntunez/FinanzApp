@@ -70,6 +70,7 @@ export default function Home() {
 
   return (
     <>
+      <div className="fixed inset-0 -z-10 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#3730a3] via-[#23204d] to-[#0a0f1a]" />
       {showWelcome && (
         <div style={{
           background: 'rgba(36, 41, 61, 0.85)',
@@ -92,185 +93,184 @@ export default function Home() {
           ¡Bienvenido, {session.user.name}!
         </div>
       )}
-      <div className="w-full min-h-screen bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#3730a3] via-[#23204d] to-[#0a0f1a] text-white">
-        {/* Sidebar oculto en móvil, visible en md+ */}
-        <div className="hidden md:block">
-          <Sidebar
-            isHovered={sidebarHovered}
-            onMouseEnter={() => setSidebarHovered(true)}
-            onMouseLeave={() => setSidebarHovered(false)}
-            onTabChange={setTab}
-            activeTab={tab}
-          />
-        </div>
-        <main
-          className={
-            `flex-1 w-full transition-all duration-300 md:${sidebarHovered ? 'ml-64' : 'ml-8'} px-1 sm:px-4`
-          }
-        >
-          <div className="max-w-screen-xl w-full mx-auto flex flex-col items-center justify-center mt-4 md:mt-16 mb-4 md:mb-12 px-0 sm:px-4">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-center mb-2 md:mb-6 bg-gradient-to-r from-blue-400 via-slate-400 to-gray-300 text-transparent bg-clip-text">💸 Finanzas Personales 💰</h2>
-            <Tabs value={tab} onValueChange={setTab}>
-              <TabsList className="flex min-w-[400px] sm:min-w-0 flex-nowrap justify-start sm:justify-center gap-1 md:gap-2 mt-2 bg-[#1e293b]/50 backdrop-blur-md rounded-xl p-1 border border-[#334155] shadow-lg overflow-x-auto">
-                <TabsTrigger value="overview">Resumen</TabsTrigger>
-                <TabsTrigger value="gastos-fijos">Gastos Fijos</TabsTrigger>
-                <TabsTrigger value="gastos-diarios">Gastos Diarios</TabsTrigger>
-                <TabsTrigger value="ingresos">Ingresos</TabsTrigger>
-                <TabsTrigger value="ahorros">Ahorros</TabsTrigger>
-              </TabsList>
-              <TabsContent value="overview" className="space-y-4">
-                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-                  <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">Balance Total</CardTitle>
-                      <DollarSign className="h-4 w-4 text-blue-400" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className={`text-2xl font-bold ${balanceTotal >= 0 ? 'text-blue-400' : 'text-rose-400'}`}>${Math.round(balanceTotal).toLocaleString('de-DE')}</div>
-                      <p className="text-xs text-gray-400">+20.1% del mes pasado</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">Gastos Fijos</CardTitle>
-                      <HomeIcon className="h-4 w-4 text-blue-400" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold text-blue-400">${Math.round(totalGastosFijos).toLocaleString('de-DE')}</div>
-                      <p className="text-xs text-gray-400">42% de tus gastos totales</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">Ingresos</CardTitle>
-                      <ArrowUp className="h-4 w-4 text-blue-400" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold text-blue-400">${Math.round(totalIngresos).toLocaleString('de-DE')}</div>
-                      <p className="text-xs text-gray-400">+12.5% del mes pasado</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">Ahorros</CardTitle>
-                      <PiggyBank className="h-4 w-4 text-blue-400" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold text-slate-300">${Math.round(totalAhorros).toLocaleString('de-DE')}</div>
-                      <p className="text-xs text-gray-400">+4.3% del mes pasado</p>
-                    </CardContent>
-                  </Card>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                  <Card className="col-span-4 bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                    <CardHeader>
-                      <CardTitle>Balance Mensual</CardTitle>
-                    </CardHeader>
-                    <CardContent className="pl-2">
-                      <BalanceChart />
-                    </CardContent>
-                  </Card>
-                  <Card className="col-span-3 bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                    <CardHeader>
-                      <CardTitle>Distribución de Gastos</CardTitle>
-                      <CardDescription>Desglose de tus gastos este mes</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <ResumenGastos />
-                    </CardContent>
-                  </Card>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                      <CardTitle className="text-sm font-medium">Gastos Recientes</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {gastosDiarios.slice(-3).reverse().map((gasto, idx) => (
-                          <div className="flex items-center" key={gasto.id}>
-                            <Wallet className="mr-2 h-4 w-4 text-blue-400" />
-                            <div className="flex-1 space-y-1">
-                              <p className="text-sm font-medium leading-none">{gasto.nombre}</p>
-                              <p className="text-sm text-gray-400">{gasto.fecha ? new Date(gasto.fecha).toLocaleDateString() : ""}</p>
-                            </div>
-                            <div className="text-sm font-medium text-rose-400">-${Math.round(Number(gasto.monto)).toLocaleString('de-DE')}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <a className="text-sm text-blue-400 hover:text-blue-300 transition-colors cursor-pointer" onClick={() => setTab('gastos-diarios')}>
-                        Ver todos los gastos
-                      </a>
-                    </CardFooter>
-                  </Card>
-                  <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                      <CardTitle className="text-sm font-medium">Ingresos Recientes</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {ingresos.slice(-3).reverse().map((ingreso, idx) => (
-                          <div className="flex items-center" key={ingreso.id}>
-                            <ArrowDown className="mr-2 h-4 w-4 text-blue-400" />
-                            <div className="flex-1 space-y-1">
-                              <p className="text-sm font-medium leading-none">{ingreso.nombre}</p>
-                              <p className="text-sm text-gray-400">{ingreso.fecha ? new Date(ingreso.fecha).toLocaleDateString() : ""}</p>
-                            </div>
-                            <div className="text-sm font-medium text-blue-400">+${Math.round(Number(ingreso.monto)).toLocaleString('de-DE')}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <a className="text-sm text-blue-400 hover:text-blue-300 transition-colors cursor-pointer" onClick={() => setTab('ingresos')}>
-                        Ver todos los ingresos
-                      </a>
-                    </CardFooter>
-                  </Card>
-                  <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                      <CardTitle className="text-sm font-medium">Ahorros</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {ahorros.slice(-3).reverse().map((ahorro, idx) => (
-                          <div className="flex items-center" key={ahorro.id}>
-                            <PiggyBank className="mr-2 h-4 w-4 text-blue-400" />
-                            <div className="flex-1 space-y-1">
-                              <p className="text-sm font-medium leading-none">{ahorro.nombre}</p>
-                              <p className="text-sm text-gray-400">{ahorro.fecha ? new Date(ahorro.fecha).toLocaleDateString() : ""}</p>
-                            </div>
-                            <div className="text-sm font-medium text-slate-300">${Math.round(Number(ahorro.monto)).toLocaleString('de-DE')}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <a className="text-sm text-blue-400 hover:text-blue-300 transition-colors cursor-pointer" onClick={() => setTab('ahorros')}>
-                        Ver todos los ahorros
-                      </a>
-                    </CardFooter>
-                  </Card>
-                </div>
-              </TabsContent>
-              <TabsContent value="gastos-fijos" className="space-y-4">
-                <GastosFijos />
-              </TabsContent>
-              <TabsContent value="gastos-diarios" className="space-y-4">
-                <GastosDiarios />
-              </TabsContent>
-              <TabsContent value="ingresos" className="space-y-4">
-                <Ingresos />
-              </TabsContent>
-              <TabsContent value="ahorros" className="space-y-4">
-                <Ahorros />
-              </TabsContent>
-            </Tabs>
-          </div>
-        </main>
+      <div className="fixed inset-0 -z-10 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#3730a3] via-[#23204d] to-[#0a0f1a]" />
+      {/* Sidebar oculto en móvil, visible en md+ */}
+      <div className="hidden md:block">
+        <Sidebar
+          isHovered={sidebarHovered}
+          onMouseEnter={() => setSidebarHovered(true)}
+          onMouseLeave={() => setSidebarHovered(false)}
+          onTabChange={setTab}
+          activeTab={tab}
+        />
       </div>
+      <main
+        className={
+          `flex-1 min-h-screen transition-all duration-300 md:${sidebarHovered ? 'ml-64' : 'ml-8'} px-1 sm:px-4`
+        }
+      >
+        <div className="max-w-screen-xl w-full mx-auto flex flex-col items-center justify-center mt-8 md:mt-16 mb-4 md:mb-12 px-0 sm:px-4">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-center mb-2 md:mb-6 bg-gradient-to-r from-blue-400 via-slate-400 to-gray-300 text-transparent bg-clip-text">💸 Finanzas Personales 💰</h2>
+          <Tabs value={tab} onValueChange={setTab}>
+            <TabsList className="flex min-w-[400px] sm:min-w-0 flex-nowrap justify-start sm:justify-center gap-1 md:gap-2 mt-2 bg-[#1e293b]/50 backdrop-blur-md rounded-xl p-1 border border-[#334155] shadow-lg overflow-x-auto">
+              <TabsTrigger value="overview">Resumen</TabsTrigger>
+              <TabsTrigger value="gastos-fijos">Gastos Fijos</TabsTrigger>
+              <TabsTrigger value="gastos-diarios">Gastos Diarios</TabsTrigger>
+              <TabsTrigger value="ingresos">Ingresos</TabsTrigger>
+              <TabsTrigger value="ahorros">Ahorros</TabsTrigger>
+            </TabsList>
+            <TabsContent value="overview" className="space-y-4">
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+                <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Balance Total</CardTitle>
+                    <DollarSign className="h-4 w-4 text-blue-400" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className={`text-2xl font-bold ${balanceTotal >= 0 ? 'text-blue-400' : 'text-rose-400'}`}>${Math.round(balanceTotal).toLocaleString('de-DE')}</div>
+                    <p className="text-xs text-gray-400">+20.1% del mes pasado</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Gastos Fijos</CardTitle>
+                    <HomeIcon className="h-4 w-4 text-blue-400" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-blue-400">${Math.round(totalGastosFijos).toLocaleString('de-DE')}</div>
+                    <p className="text-xs text-gray-400">42% de tus gastos totales</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Ingresos</CardTitle>
+                    <ArrowUp className="h-4 w-4 text-blue-400" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-blue-400">${Math.round(totalIngresos).toLocaleString('de-DE')}</div>
+                    <p className="text-xs text-gray-400">+12.5% del mes pasado</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Ahorros</CardTitle>
+                    <PiggyBank className="h-4 w-4 text-blue-400" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-slate-300">${Math.round(totalAhorros).toLocaleString('de-DE')}</div>
+                    <p className="text-xs text-gray-400">+4.3% del mes pasado</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                <Card className="col-span-4 bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                  <CardHeader>
+                    <CardTitle>Balance Mensual</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pl-2">
+                    <BalanceChart />
+                  </CardContent>
+                </Card>
+                <Card className="col-span-3 bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                  <CardHeader>
+                    <CardTitle>Distribución de Gastos</CardTitle>
+                    <CardDescription>Desglose de tus gastos este mes</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ResumenGastos />
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <CardTitle className="text-sm font-medium">Gastos Recientes</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {gastosDiarios.slice(-3).reverse().map((gasto, idx) => (
+                        <div className="flex items-center" key={gasto.id}>
+                          <Wallet className="mr-2 h-4 w-4 text-blue-400" />
+                          <div className="flex-1 space-y-1">
+                            <p className="text-sm font-medium leading-none">{gasto.nombre}</p>
+                            <p className="text-sm text-gray-400">{gasto.fecha ? new Date(gasto.fecha).toLocaleDateString() : ""}</p>
+                          </div>
+                          <div className="text-sm font-medium text-rose-400">-${Math.round(Number(gasto.monto)).toLocaleString('de-DE')}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <a className="text-sm text-blue-400 hover:text-blue-300 transition-colors cursor-pointer" onClick={() => setTab('gastos-diarios')}>
+                      Ver todos los gastos
+                    </a>
+                  </CardFooter>
+                </Card>
+                <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <CardTitle className="text-sm font-medium">Ingresos Recientes</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {ingresos.slice(-3).reverse().map((ingreso, idx) => (
+                        <div className="flex items-center" key={ingreso.id}>
+                          <ArrowDown className="mr-2 h-4 w-4 text-blue-400" />
+                          <div className="flex-1 space-y-1">
+                            <p className="text-sm font-medium leading-none">{ingreso.nombre}</p>
+                            <p className="text-sm text-gray-400">{ingreso.fecha ? new Date(ingreso.fecha).toLocaleDateString() : ""}</p>
+                          </div>
+                          <div className="text-sm font-medium text-blue-400">+${Math.round(Number(ingreso.monto)).toLocaleString('de-DE')}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <a className="text-sm text-blue-400 hover:text-blue-300 transition-colors cursor-pointer" onClick={() => setTab('ingresos')}>
+                      Ver todos los ingresos
+                    </a>
+                  </CardFooter>
+                </Card>
+                <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <CardTitle className="text-sm font-medium">Ahorros</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {ahorros.slice(-3).reverse().map((ahorro, idx) => (
+                        <div className="flex items-center" key={ahorro.id}>
+                          <PiggyBank className="mr-2 h-4 w-4 text-blue-400" />
+                          <div className="flex-1 space-y-1">
+                            <p className="text-sm font-medium leading-none">{ahorro.nombre}</p>
+                            <p className="text-sm text-gray-400">{ahorro.fecha ? new Date(ahorro.fecha).toLocaleDateString() : ""}</p>
+                          </div>
+                          <div className="text-sm font-medium text-slate-300">${Math.round(Number(ahorro.monto)).toLocaleString('de-DE')}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <a className="text-sm text-blue-400 hover:text-blue-300 transition-colors cursor-pointer" onClick={() => setTab('ahorros')}>
+                      Ver todos los ahorros
+                    </a>
+                  </CardFooter>
+                </Card>
+              </div>
+            </TabsContent>
+            <TabsContent value="gastos-fijos" className="space-y-4">
+              <GastosFijos />
+            </TabsContent>
+            <TabsContent value="gastos-diarios" className="space-y-4">
+              <GastosDiarios />
+            </TabsContent>
+            <TabsContent value="ingresos" className="space-y-4">
+              <Ingresos />
+            </TabsContent>
+            <TabsContent value="ahorros" className="space-y-4">
+              <Ahorros />
+            </TabsContent>
+          </Tabs>
+        </div>
+      </main>
     </>
   )
 }

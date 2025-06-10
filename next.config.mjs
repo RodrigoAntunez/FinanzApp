@@ -8,6 +8,20 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    domains: ['lh3.googleusercontent.com'],
+  },
+  async headers() {
+    return [
+      {
+        source: '/api/telegram/webhook',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/json',
+          },
+        ],
+      },
+    ];
   },
 }
 

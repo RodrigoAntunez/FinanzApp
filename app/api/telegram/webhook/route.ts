@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
 import { bot } from '@/lib/telegram/config';
+import { initializeBot } from '@/lib/telegram/service';
+
+// Inicializar el bot
+initializeBot();
 
 export async function POST(req: Request) {
   try {

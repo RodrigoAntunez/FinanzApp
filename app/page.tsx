@@ -118,7 +118,7 @@ export default function Home() {
               <TabsTrigger value="ahorros">Ahorros</TabsTrigger>
             </TabsList>
             <TabsContent value="overview" className="space-y-8 md:space-y-12 w-full">
-              <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
                 <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Balance Total</CardTitle>
@@ -160,7 +160,7 @@ export default function Home() {
                   </CardContent>
                 </Card>
               </div>
-              <div className="grid gap-8 grid-cols-1 lg:grid-cols-2 w-full">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
                 <Card className="col-span-4 bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                   <CardHeader>
                     <CardTitle>Balance Mensual</CardTitle>
@@ -179,7 +179,7 @@ export default function Home() {
                   </CardContent>
                 </Card>
               </div>
-              <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
                 <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-sm font-medium">Gastos Recientes</CardTitle>

@@ -106,21 +106,21 @@ export default function Home() {
       </div>
       <main
         className={
-          `flex-1 min-h-screen transition-all duration-300 md:${sidebarHovered ? 'ml-64' : 'ml-8'} px-2 sm:px-4 lg:px-6`
+          `flex-1 min-h-screen transition-all duration-300 md:${sidebarHovered ? 'ml-64' : 'ml-8'} px-0`
         }
       >
-        <div className="w-full flex flex-col items-center justify-center mt-16 md:mt-24 mb-8 md:mb-20 px-0 gap-8 md:gap-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-center mb-4 md:mb-10 bg-gradient-to-r from-blue-400 via-slate-400 to-gray-300 text-transparent bg-clip-text">💸 Finanzas Personales 💰</h2>
+        <div className="w-full flex flex-col items-center justify-center mt-12 md:mt-20 mb-6 md:mb-16 px-0 gap-10 md:gap-16">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-center mb-6 md:mb-14 bg-gradient-to-r from-blue-400 via-slate-400 to-gray-300 text-transparent bg-clip-text">💸 Finanzas Personales 💰</h2>
           <Tabs value={tab} onValueChange={setTab}>
-            <TabsList className="flex min-w-[400px] sm:min-w-0 flex-nowrap justify-start sm:justify-center gap-2 md:gap-4 mt-4 bg-[#1e293b]/50 backdrop-blur-md rounded-xl p-2 border border-[#334155] shadow-lg overflow-x-auto">
+            <TabsList className="flex w-full flex-nowrap justify-start sm:justify-center gap-4 md:gap-6 mt-6 bg-[#1e293b]/50 backdrop-blur-md rounded-xl p-2 border border-[#334155] shadow-lg overflow-x-auto">
               <TabsTrigger value="overview">Resumen</TabsTrigger>
               <TabsTrigger value="gastos-fijos">Gastos Fijos</TabsTrigger>
               <TabsTrigger value="gastos-diarios">Gastos Diarios</TabsTrigger>
               <TabsTrigger value="ingresos">Ingresos</TabsTrigger>
               <TabsTrigger value="ahorros">Ahorros</TabsTrigger>
             </TabsList>
-            <TabsContent value="overview" className="space-y-8 md:space-y-12">
-              <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full">
+            <TabsContent value="overview" className="space-y-10 md:space-y-16 w-full">
+              <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full">
                 <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Balance Total</CardTitle>
@@ -162,7 +162,7 @@ export default function Home() {
                   </CardContent>
                 </Card>
               </div>
-              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-7 w-full">
+              <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-7 w-full">
                 <Card className="col-span-4 bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                   <CardHeader>
                     <CardTitle>Balance Mensual</CardTitle>
@@ -181,7 +181,7 @@ export default function Home() {
                   </CardContent>
                 </Card>
               </div>
-              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 w-full">
+              <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3 w-full">
                 <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-sm font-medium">Gastos Recientes</CardTitle>

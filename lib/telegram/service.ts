@@ -3,14 +3,18 @@ import { prisma } from '../prisma';
 
 // Inicializar el bot
 export function initializeBot() {
+  console.log('Inicializando bot de Telegram...');
+
   // Comando /start
   bot.command('start', async (ctx) => {
+    console.log('Comando /start recibido');
     const telegramId = ctx.from.id.toString();
     await ctx.reply(WELCOME_MESSAGE);
   });
 
   // Comando /help
   bot.command('help', async (ctx) => {
+    console.log('Comando /help recibido');
     await ctx.reply(HELP_MESSAGE);
   });
 
@@ -150,7 +154,20 @@ export function initializeBot() {
   });
 
   // Iniciar el bot
-  bot.launch().catch(console.error);
+  console.log('Iniciando bot...');
+  bot.launch()
+    .then(() => {
+      console.log('Bot iniciado correctamente');
+    })
+    .catch((error) => {
+      console.error('Error al iniciar el bot:', error);
+    });
+
+  // Manejar errores
+  bot.catch((err, ctx) => {
+    console.error('Error en el bot:', err);
+    ctx.reply('❌ Ocurrió un error al procesar tu comando. Por favor, intenta de nuevo.');
+  });
 }
 
 // Función para vincular un usuario de Telegram con un usuario de la aplicación

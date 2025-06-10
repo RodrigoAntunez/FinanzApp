@@ -1,3 +1,5 @@
+import './lib/telegram';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {

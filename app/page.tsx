@@ -106,21 +106,21 @@ export default function Home() {
       </div>
       <main
         className={
-          `flex-1 min-h-screen transition-all duration-300 md:${sidebarHovered ? 'ml-64' : 'ml-8'} px-1 sm:px-4`
+          `flex-1 min-h-screen transition-all duration-300 md:${sidebarHovered ? 'ml-64' : 'ml-8'} px-4 sm:px-8 lg:px-16`
         }
       >
-        <div className="max-w-screen-xl w-full mx-auto flex flex-col items-center justify-center mt-8 md:mt-16 mb-4 md:mb-12 px-0 sm:px-4">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-center mb-2 md:mb-6 bg-gradient-to-r from-blue-400 via-slate-400 to-gray-300 text-transparent bg-clip-text">💸 Finanzas Personales 💰</h2>
+        <div className="max-w-screen-xl w-full mx-auto flex flex-col items-center justify-center mt-16 md:mt-24 mb-8 md:mb-20 px-2 sm:px-8 lg:px-16 gap-8 md:gap-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-center mb-4 md:mb-10 bg-gradient-to-r from-blue-400 via-slate-400 to-gray-300 text-transparent bg-clip-text">💸 Finanzas Personales 💰</h2>
           <Tabs value={tab} onValueChange={setTab}>
-            <TabsList className="flex min-w-[400px] sm:min-w-0 flex-nowrap justify-start sm:justify-center gap-1 md:gap-2 mt-2 bg-[#1e293b]/50 backdrop-blur-md rounded-xl p-1 border border-[#334155] shadow-lg overflow-x-auto">
+            <TabsList className="flex min-w-[400px] sm:min-w-0 flex-nowrap justify-start sm:justify-center gap-2 md:gap-4 mt-4 bg-[#1e293b]/50 backdrop-blur-md rounded-xl p-2 border border-[#334155] shadow-lg overflow-x-auto">
               <TabsTrigger value="overview">Resumen</TabsTrigger>
               <TabsTrigger value="gastos-fijos">Gastos Fijos</TabsTrigger>
               <TabsTrigger value="gastos-diarios">Gastos Diarios</TabsTrigger>
               <TabsTrigger value="ingresos">Ingresos</TabsTrigger>
               <TabsTrigger value="ahorros">Ahorros</TabsTrigger>
             </TabsList>
-            <TabsContent value="overview" className="space-y-4">
-              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            <TabsContent value="overview" className="space-y-8 md:space-y-12">
+              <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                 <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Balance Total</CardTitle>
@@ -162,7 +162,7 @@ export default function Home() {
                   </CardContent>
                 </Card>
               </div>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-4 bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                   <CardHeader>
                     <CardTitle>Balance Mensual</CardTitle>
@@ -181,7 +181,7 @@ export default function Home() {
                   </CardContent>
                 </Card>
               </div>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                 <Card className="bg-[#1e293b]/60 border-[#334155] hover:bg-[#1e293b]/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-sm font-medium">Gastos Recientes</CardTitle>

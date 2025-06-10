@@ -9,24 +9,50 @@ export function initializeBot() {
   bot.command('start', async (ctx) => {
     console.log('Comando /start recibido');
     const telegramId = ctx.from.id.toString();
-    await ctx.reply(WELCOME_MESSAGE);
+    console.log('ID de Telegram:', telegramId);
+    
+    // Verificar si el usuario ya está vinculado
+    const user = await prisma.user.findUnique({
+      where: { telegramId },
+    });
+
+    if (user) {
+      await ctx.reply(`¡Bienvenido de nuevo ${user.name || 'usuario'}! 🎉\n\n${HELP_MESSAGE}`);
+    } else {
+      await ctx.reply(`${WELCOME_MESSAGE}\n\n⚠️ Para usar el bot, primero debes vincular tu cuenta de Telegram en la aplicación web: https://finanz-app-eight.vercel.app/telegram`);
+    }
   });
 
   // Comando /help
   bot.command('help', async (ctx) => {
     console.log('Comando /help recibido');
-    await ctx.reply(HELP_MESSAGE);
-  });
-
-  // Comando /gasto
-  bot.command('gasto', async (ctx) => {
     const telegramId = ctx.from.id.toString();
+    console.log('ID de Telegram:', telegramId);
+
     const user = await prisma.user.findUnique({
       where: { telegramId },
     });
 
     if (!user) {
-      await ctx.reply('❌ No estás vinculado a ninguna cuenta. Por favor, vincula tu cuenta de Telegram en la aplicación web.');
+      await ctx.reply('⚠️ Para usar el bot, primero debes vincular tu cuenta de Telegram en la aplicación web: https://finanz-app-eight.vercel.app/telegram');
+      return;
+    }
+
+    await ctx.reply(HELP_MESSAGE);
+  });
+
+  // Comando /gasto
+  bot.command('gasto', async (ctx) => {
+    console.log('Comando /gasto recibido');
+    const telegramId = ctx.from.id.toString();
+    console.log('ID de Telegram:', telegramId);
+
+    const user = await prisma.user.findUnique({
+      where: { telegramId },
+    });
+
+    if (!user) {
+      await ctx.reply('⚠️ Para usar el bot, primero debes vincular tu cuenta de Telegram en la aplicación web: https://finanz-app-eight.vercel.app/telegram');
       return;
     }
 
@@ -81,13 +107,16 @@ export function initializeBot() {
 
   // Comando /resumen
   bot.command('resumen', async (ctx) => {
+    console.log('Comando /resumen recibido');
     const telegramId = ctx.from.id.toString();
+    console.log('ID de Telegram:', telegramId);
+
     const user = await prisma.user.findUnique({
       where: { telegramId },
     });
 
     if (!user) {
-      await ctx.reply('❌ No estás vinculado a ninguna cuenta. Por favor, vincula tu cuenta de Telegram en la aplicación web.');
+      await ctx.reply('⚠️ Para usar el bot, primero debes vincular tu cuenta de Telegram en la aplicación web: https://finanz-app-eight.vercel.app/telegram');
       return;
     }
 
@@ -103,6 +132,11 @@ export function initializeBot() {
           categoria: true,
         },
       });
+
+      if (gastos.length === 0) {
+        await ctx.reply('📊 No tienes gastos registrados hoy.');
+        return;
+      }
 
       const total = gastos.reduce((sum, gasto) => sum + gasto.monto, 0);
 
@@ -121,13 +155,16 @@ export function initializeBot() {
 
   // Comando /categorias
   bot.command('categorias', async (ctx) => {
+    console.log('Comando /categorias recibido');
     const telegramId = ctx.from.id.toString();
+    console.log('ID de Telegram:', telegramId);
+
     const user = await prisma.user.findUnique({
       where: { telegramId },
     });
 
     if (!user) {
-      await ctx.reply('❌ No estás vinculado a ninguna cuenta. Por favor, vincula tu cuenta de Telegram en la aplicación web.');
+      await ctx.reply('⚠️ Para usar el bot, primero debes vincular tu cuenta de Telegram en la aplicación web: https://finanz-app-eight.vercel.app/telegram');
       return;
     }
 
